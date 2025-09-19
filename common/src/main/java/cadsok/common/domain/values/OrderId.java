@@ -1,9 +1,9 @@
-package cadsok.common.domain.value.object;
+package cadsok.common.domain.values;
 
 import java.util.UUID;
 
 public class OrderId extends BaseId<UUID> {
-    protected OrderId(UUID value) {
+    public OrderId(UUID value) {
         super(value);
     }
 }

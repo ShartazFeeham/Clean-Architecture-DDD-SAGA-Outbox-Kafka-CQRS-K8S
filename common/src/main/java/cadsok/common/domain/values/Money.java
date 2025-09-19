@@ -1,4 +1,4 @@
-package cadsok.common.domain.value.object;
+package cadsok.common.domain.values;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -7,6 +7,7 @@ import java.util.Objects;
 public class Money {
 
     private final BigDecimal amount;
+    public static final Money ZERO = new Money(BigDecimal.ZERO);
 
     public Money(BigDecimal amount) {
         this.amount = amount;
