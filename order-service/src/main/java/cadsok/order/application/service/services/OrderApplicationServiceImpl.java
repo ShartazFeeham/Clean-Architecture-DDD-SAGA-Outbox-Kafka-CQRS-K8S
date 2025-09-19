@@ -1,4 +1,4 @@
-package cadsok.order.application.service.services.input;
+package cadsok.order.application.service.services;
 
 import cadsok.order.application.service.models.create.CreateOrderCommand;
 import cadsok.order.application.service.models.create.CreateOrderResponse;

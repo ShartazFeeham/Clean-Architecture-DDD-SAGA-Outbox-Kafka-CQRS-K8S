@@ -1,4 +1,4 @@
-package cadsok.order.application.service.services.input;
+package cadsok.order.application.service.services;
 
 import cadsok.order.application.service.mapper.OrderDataMapper;
 import cadsok.order.application.service.models.track.TrackOrderQuery;
