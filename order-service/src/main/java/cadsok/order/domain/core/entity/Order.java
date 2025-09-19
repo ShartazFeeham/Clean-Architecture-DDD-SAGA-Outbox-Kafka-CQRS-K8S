@@ -3,6 +3,8 @@ package cadsok.order.domain.core.entity;
 import cadsok.common.domain.entity.AggregateRoot;
 import cadsok.common.domain.values.*;
 import cadsok.order.domain.core.exception.OrderDomainException;
+import cadsok.order.domain.core.values.StreetAddress;
+import cadsok.order.domain.core.values.TrackingId;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +29,7 @@ public class Order extends AggregateRoot<OrderId> {
         validateOrder();
     }
 
-    private void validateOrder() {
+    public void validateOrder() {
         validateInitialOrder();
         validateTotalPrice();
         validateItemsPrice();

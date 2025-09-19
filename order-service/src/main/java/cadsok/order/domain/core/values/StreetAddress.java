@@ -1,4 +1,4 @@
-package cadsok.common.domain.values;
+package cadsok.order.domain.core.values;
 
 import java.util.Objects;
 import java.util.UUID;

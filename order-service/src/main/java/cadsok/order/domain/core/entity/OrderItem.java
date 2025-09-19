@@ -3,7 +3,7 @@ package cadsok.order.domain.core.entity;
 import cadsok.common.domain.entity.BaseEntity;
 import cadsok.common.domain.values.Money;
 import cadsok.common.domain.values.OrderId;
-import cadsok.common.domain.values.OrderItemId;
+import cadsok.order.domain.core.values.OrderItemId;
 
 public class OrderItem extends BaseEntity<OrderItemId> {
 
