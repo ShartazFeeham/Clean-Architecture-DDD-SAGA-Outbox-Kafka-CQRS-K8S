@@ -10,9 +10,11 @@ import cadsok.order.domain.core.event.OrderPaidEvent;
 import cadsok.order.domain.core.exception.OrderDomainException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrderDomainServiceImpl implements OrderDomainService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderDomainServiceImpl.class);

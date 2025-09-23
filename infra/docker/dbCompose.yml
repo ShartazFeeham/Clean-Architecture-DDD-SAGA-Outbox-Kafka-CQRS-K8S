@@ -1,0 +1,35 @@
+version: '3'
+services:
+  # Postgres database for order-service
+  storage-order-service-pg-db:
+    image: postgres:14.15-alpine3.20
+    container_name: storage-service-pg-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: storage-service-pg-db
+      POSTGRES_USER: storage-service-pg-db_user
+      POSTGRES_PASSWORD: storage-service-pg-db_password
+    volumes:
+      - storage-service-pg-db_local_data:/var/lib/postgresql/data
+
+  # PG Admin for postgres database UI
+  storage-pg-admin-postgres-ui:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8088:80"
+    depends_on:
+      - storage-order-service-pg-db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+volumes:
+  elasticsearch_data:
+    driver: local
+  storage-service-pg-db_local_data:
+  pgadmin-data:
