@@ -1,2 +1,2 @@
 rootProject.name = 'Clean-Architecture-DDD-SAGA-Outbox-Kafka'
-include 'common-module', 'order-service'
+include 'common-module', 'order-service', 'infra'
