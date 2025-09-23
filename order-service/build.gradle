@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Local dependencies
-    implementation project(':common')
+    implementation project(':common-module')
 }
 
 tasks.named('test') {
