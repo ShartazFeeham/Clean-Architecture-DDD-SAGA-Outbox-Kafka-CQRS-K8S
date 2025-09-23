@@ -1,6 +1,6 @@
 package cadsok.order.application.service.models.create;
 
-import cadsok.common.domain.values.OrderStatus;
+import commonmodule.domain.values.OrderStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

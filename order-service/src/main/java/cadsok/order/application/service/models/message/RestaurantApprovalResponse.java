@@ -1,6 +1,6 @@
 package cadsok.order.application.service.models.message;
 
-import cadsok.common.domain.values.OrderApprovalStatus;
+import commonmodule.domain.values.OrderApprovalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

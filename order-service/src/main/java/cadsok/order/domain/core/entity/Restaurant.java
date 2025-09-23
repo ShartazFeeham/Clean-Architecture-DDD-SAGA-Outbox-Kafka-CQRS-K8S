@@ -1,7 +1,7 @@
 package cadsok.order.domain.core.entity;
 
-import cadsok.common.domain.entity.AggregateRoot;
-import cadsok.common.domain.values.RestaurantId;
+import commonmodule.domain.entity.AggregateRoot;
+import commonmodule.domain.values.RestaurantId;
 
 import java.util.List;
 

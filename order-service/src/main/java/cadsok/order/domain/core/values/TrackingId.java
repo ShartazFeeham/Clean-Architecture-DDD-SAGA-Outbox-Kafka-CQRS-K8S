@@ -1,6 +1,6 @@
 package cadsok.order.domain.core.values;
 
-import cadsok.common.domain.values.BaseId;
+import commonmodule.domain.values.BaseId;
 
 import java.util.UUID;
 

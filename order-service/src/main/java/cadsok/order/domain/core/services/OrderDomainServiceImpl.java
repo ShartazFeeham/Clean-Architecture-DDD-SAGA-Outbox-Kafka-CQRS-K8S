@@ -1,6 +1,6 @@
 package cadsok.order.domain.core.services;
 
-import cadsok.common.domain.values.DateTimeUtil;
+import commonmodule.domain.values.DateTimeUtil;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Product;
 import cadsok.order.domain.core.entity.Restaurant;

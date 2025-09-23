@@ -1,7 +1,7 @@
 package cadsok.order.domain.core.entity;
 
-import cadsok.common.domain.entity.AggregateRoot;
-import cadsok.common.domain.values.*;
+import commonmodule.domain.entity.AggregateRoot;
+import commonmodule.domain.values.*;
 import cadsok.order.domain.core.exception.OrderDomainException;
 import cadsok.order.domain.core.values.StreetAddress;
 import cadsok.order.domain.core.values.TrackingId;

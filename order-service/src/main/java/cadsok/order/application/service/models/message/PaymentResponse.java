@@ -1,6 +1,6 @@
 package cadsok.order.application.service.models.message;
 
-import cadsok.common.domain.values.PaymentStatus;
+import commonmodule.domain.values.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,9 +1,9 @@
 package cadsok.order.application.service.mapper;
 
-import cadsok.common.domain.values.CustomerId;
-import cadsok.common.domain.values.Money;
-import cadsok.common.domain.values.ProductId;
-import cadsok.common.domain.values.RestaurantId;
+import commonmodule.domain.values.CustomerId;
+import commonmodule.domain.values.Money;
+import commonmodule.domain.values.ProductId;
+import commonmodule.domain.values.RestaurantId;
 import cadsok.order.application.service.models.create.CreateOrderCommand;
 import cadsok.order.application.service.models.create.CreateOrderResponse;
 import cadsok.order.application.service.models.create.OrderAddress;

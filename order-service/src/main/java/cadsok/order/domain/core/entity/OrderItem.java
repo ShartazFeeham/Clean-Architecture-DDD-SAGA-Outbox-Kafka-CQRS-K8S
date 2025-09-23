@@ -1,8 +1,8 @@
 package cadsok.order.domain.core.entity;
 
-import cadsok.common.domain.entity.BaseEntity;
-import cadsok.common.domain.values.Money;
-import cadsok.common.domain.values.OrderId;
+import commonmodule.domain.entity.BaseEntity;
+import commonmodule.domain.values.Money;
+import commonmodule.domain.values.OrderId;
 import cadsok.order.domain.core.values.OrderItemId;
 
 public class OrderItem extends BaseEntity<OrderItemId> {

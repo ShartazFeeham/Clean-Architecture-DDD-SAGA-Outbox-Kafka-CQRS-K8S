@@ -1,6 +1,6 @@
 package cadsok.order.domain.core.event;
 
-import cadsok.common.domain.events.DomainEvent;
+import commonmodule.domain.events.DomainEvent;
 import cadsok.order.domain.core.entity.Order;
 
 import java.time.ZonedDateTime;

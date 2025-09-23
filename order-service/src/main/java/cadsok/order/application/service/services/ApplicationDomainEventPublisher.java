@@ -1,6 +1,6 @@
 package cadsok.order.application.service.services;
 
-import cadsok.common.domain.events.publisher.DomainEventPublisher;
+import commonmodule.domain.events.publisher.DomainEventPublisher;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

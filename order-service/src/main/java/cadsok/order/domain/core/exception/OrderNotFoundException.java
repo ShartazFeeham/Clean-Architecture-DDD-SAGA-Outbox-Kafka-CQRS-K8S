@@ -1,7 +1,7 @@
 package cadsok.order.domain.core.exception;
 
 
-import cadsok.common.domain.exceptions.DomainException;
+import commonmodule.domain.exceptions.DomainException;
 
 public class OrderNotFoundException extends DomainException {
 
