@@ -1,7 +1,11 @@
-version: '3'
+version: "3.8"
 services:
+
   # Postgres database for order-service
   storage-order-service-pg-db:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: postgres:14.15-alpine3.20
     container_name: storage-service-pg-db
     restart: always
@@ -16,6 +20,9 @@ services:
 
   # PG Admin for postgres database UI
   storage-pg-admin-postgres-ui:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: dpage/pgadmin4
     container_name: pgadmin4_container
     restart: always

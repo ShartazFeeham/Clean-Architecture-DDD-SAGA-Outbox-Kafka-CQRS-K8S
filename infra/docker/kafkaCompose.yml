@@ -17,7 +17,11 @@ x-common-kafka-environment: &common-kafka-environment
   KAFKA_AUTO_CREATE_TOPICS_ENABLE: true # default it also true
 
 services:
+
   zookeeper:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: confluentinc/cp-zookeeper:7.8.0
     hostname: zookeeper
     container_name: zookeeper
@@ -29,6 +33,9 @@ services:
       ZOOKEEPER_SERVERS: zookeeper:2888:3888
 
   kafka1:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka1
     container_name: kafka1
@@ -43,6 +50,9 @@ services:
       - zookeeper
 
   kafka2:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka2
     container_name: kafka2
@@ -57,6 +67,9 @@ services:
       - zookeeper
 
   kafka3:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka3
     container_name: kafka3
@@ -71,6 +84,9 @@ services:
       - zookeeper
 
   schema-registry:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: confluentinc/cp-schema-registry:7.8.0
     hostname: schema-registry
     container_name: schema-registry
@@ -87,6 +103,9 @@ services:
       - kafka3
 
   postgresql:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial
     image: postgres:14
     hostname: postgresql
     container_name: postgresql

@@ -4,4 +4,17 @@ spring:
   application:
     name: order-service
 
-#
+  # Database configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/storage-service-pg-db
+    username: storage-service-pg-db_user
+    password: storage-service-pg-db_password
+
+  # JPA configuration
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true

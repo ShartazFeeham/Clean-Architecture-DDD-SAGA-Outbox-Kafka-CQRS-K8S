@@ -1,0 +1,7 @@
+services:
+  common-config-initial:
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    restart: always

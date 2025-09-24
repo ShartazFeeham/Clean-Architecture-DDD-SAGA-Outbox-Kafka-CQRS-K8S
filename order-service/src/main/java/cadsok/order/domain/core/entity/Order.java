@@ -11,14 +11,16 @@ import java.util.UUID;
 
 public class Order extends AggregateRoot<OrderId> {
 
+    // Reference IDs
     private final CustomerId customerId;
     private final RestaurantId restaurantId;
-    private final StreetAddress deliveryAddress;
-    private final Money price;
-    private final List<OrderItem> items;
-
     private TrackingId trackingId;
+    // Order details: stats
+    private final Money price;;
     private OrderStatus orderStatus;
+    private final StreetAddress deliveryAddress;
+    // Order details: items
+    private final List<OrderItem> items;
     private List<String> failureMessages;
 
     public void initializeOrder() {
