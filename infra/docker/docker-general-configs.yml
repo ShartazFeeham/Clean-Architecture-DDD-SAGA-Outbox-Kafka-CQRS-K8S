@@ -5,3 +5,38 @@ services:
         limits:
           memory: 700m
     restart: always
+
+  common-config-initial-100m:
+    deploy:
+      resources:
+        limits:
+          memory: 100m
+    restart: always
+
+  common-config-initial-200m:
+    deploy:
+      resources:
+        limits:
+          memory: 100m
+    restart: always
+
+  common-config-initial-400m:
+    deploy:
+      resources:
+        limits:
+          memory: 100m
+    restart: always
+
+  common-config-initial-800m:
+    deploy:
+      resources:
+        limits:
+          memory: 100m
+    restart: always
+
+  common-config-initial-1600m:
+    deploy:
+      resources:
+        limits:
+          memory: 100m
+    restart: always

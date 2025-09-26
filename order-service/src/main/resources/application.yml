@@ -18,6 +18,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  sql:
+    init:
+      mode: always
 
 local:
   kafka-topic-name: order-events

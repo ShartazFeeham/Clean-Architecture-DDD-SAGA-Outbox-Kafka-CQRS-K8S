@@ -21,7 +21,7 @@ services:
   zookeeper:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-100m
     image: confluentinc/cp-zookeeper:7.8.0
     hostname: zookeeper
     container_name: zookeeper
@@ -35,7 +35,7 @@ services:
   kafka1:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-800m
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka1
     container_name: kafka1
@@ -52,7 +52,7 @@ services:
   kafka2:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-800m
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka2
     container_name: kafka2
@@ -69,7 +69,7 @@ services:
   kafka3:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-800m
     image: confluentinc/cp-kafka:7.8.0
     hostname: kafka3
     container_name: kafka3
@@ -86,7 +86,7 @@ services:
   schema-registry:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-100m
     image: confluentinc/cp-schema-registry:7.8.0
     hostname: schema-registry
     container_name: schema-registry
@@ -105,7 +105,7 @@ services:
   postgresql:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-100m
     image: postgres:14
     hostname: postgresql
     container_name: postgresql
@@ -116,6 +116,9 @@ services:
       POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
 
   conduktor-console:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial-400m
     image: conduktor/conduktor-console:1.31.0
     hostname: conduktor-console
     container_name: conduktor-console

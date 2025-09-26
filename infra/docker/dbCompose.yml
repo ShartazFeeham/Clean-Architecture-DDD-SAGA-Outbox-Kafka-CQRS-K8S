@@ -5,7 +5,7 @@ services:
   storage-order-service-pg-db:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-100m
     image: postgres:14.15-alpine3.20
     container_name: storage-service-pg-db
     restart: always
@@ -22,7 +22,7 @@ services:
   storage-pg-admin-postgres-ui:
     extends:
       file: docker-general-configs.yml
-      service: common-config-initial
+      service: common-config-initial-100m
     image: dpage/pgadmin4
     container_name: pgadmin4_container
     restart: always
