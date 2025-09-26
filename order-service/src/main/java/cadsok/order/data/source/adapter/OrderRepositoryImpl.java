@@ -5,13 +5,13 @@ import cadsok.order.data.source.entities.OrderEntity;
 import cadsok.order.data.source.mapper.OrderMapper;
 import cadsok.order.data.source.repositories.OrderJpaRepository;
 import cadsok.order.domain.core.entity.Order;
-import cadsok.order.domain.core.exception.OrderNotFoundException;
 import cadsok.order.domain.core.values.TrackingId;
-import org.springframework.stereotype.Service;
+import commonmodule.domain.values.OrderId;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Service
+@Repository
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
@@ -28,10 +28,19 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public Optional<Order> findById(OrderId orderId) {
+        Optional<OrderEntity> orderEntityOp = orderJpaRepository.findById(orderId.getValue());
+        if (orderEntityOp.isEmpty()) {
+            return Optional.empty();
+        }
+        return orderEntityOp.map(OrderMapper::toOrder);
+    }
+
+    @Override
     public Optional<Order> findByTrackingId(TrackingId trackingId) {
         Optional<OrderEntity> orderOp = orderJpaRepository.findByTrackingId(trackingId.getValue());
         if (orderOp.isEmpty()) {
-            throw new OrderNotFoundException("Could not find order with tracking id: " + trackingId);
+            return Optional.empty();
         }
         return orderOp.map(OrderMapper::toOrder);
     }
