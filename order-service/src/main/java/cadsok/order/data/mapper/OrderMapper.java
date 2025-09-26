@@ -20,7 +20,7 @@ public class OrderMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger log = LoggerFactory.getLogger(OrderMapper.class);
     
-    public static OrderEntity toOrderEntity(Order order) {
+    public static OrderEntity toOrderEntity(Order order, StreetAddressEntity streetAddressEntity) {
         return OrderEntity.builder()
                 .customerId(order.getCustomerId().getValue())
                 .restaurantId(order.getRestaurantId().getValue())
@@ -28,11 +28,12 @@ public class OrderMapper {
                 .price(order.getPrice().getAmount().toString())
                 .orderStatus(OrderStatusMapper.toDbStatus(order.getOrderStatus()))
                 .deliveryAddress(
-                        StreetAddressEntity.builder()
-                                .city(order.getDeliveryAddress().getCity())
-                                .postalCode(order.getDeliveryAddress().getPostalCode())
-                                .street(order.getDeliveryAddress().getStreet())
-                                .build()
+//                        StreetAddressEntity.builder()
+//                                .city(order.getDeliveryAddress().getCity())
+//                                .postalCode(order.getDeliveryAddress().getPostalCode())
+//                                .street(order.getDeliveryAddress().getStreet())
+//                                .build()
+                        streetAddressEntity
                 )
                 .items(order.getItems().stream().map(OrderItemMapper::toOrderItemEntity).toList())
                 .failureMessages(getFailureMessagesAsString(order.getFailureMessages()))

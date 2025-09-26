@@ -1,6 +1,2 @@
-curl -X POST http://localhost:10/orders/track \
-  -H "Content-Type: application/json" \
-  -d '{
-    "orderId": "a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1",
-    "trackingId": "t1t1t1t1-t1t1-t1t1-t1t1-t1t1t1t1t1t1"
-  }'
+curl --location 'http://localhost:10/orders/233bcb9b-2aa3-4fe7-bb54-ace35a731c7b' \
+--header 'Content-Type: application/json'

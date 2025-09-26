@@ -9,16 +9,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
 @MappedSuperclass
-public class BaseEntityLong implements Serializable {
+public class BaseEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
-    protected Long id;
+    protected UUID id;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -32,7 +33,7 @@ public class BaseEntityLong implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof BaseEntityLong that)) {
+        if (!(o instanceof BaseEntity that)) {
             return false;
         }
         return id.equals(that.id);

@@ -1,9 +1,6 @@
 package cadsok.order.data.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-public class OrderEntity extends BaseEntityUUID {
+public class OrderEntity extends BaseEntity {
 
     // Reference IDs
     @Column(updatable = false, nullable = false)
@@ -40,8 +37,8 @@ public class OrderEntity extends BaseEntityUUID {
     private StreetAddressEntity deliveryAddress;
 
     // Order details: items
-    @OneToMany
     @NotNull
+    @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<OrderItemEntity> items;
     private String failureMessages;
 }

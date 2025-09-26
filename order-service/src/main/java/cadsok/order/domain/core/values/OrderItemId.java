@@ -2,8 +2,10 @@ package cadsok.order.domain.core.values;
 
 import commonmodule.domain.values.BaseId;
 
-public class OrderItemId extends BaseId<Long> {
-    public OrderItemId(Long value) {
+import java.util.UUID;
+
+public class OrderItemId extends BaseId<UUID> {
+    public OrderItemId(UUID value) {
         super(value);
     }
 }

@@ -45,3 +45,7 @@ local:
       value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
     admin:
       enabled: true
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

@@ -1,5 +1,8 @@
 package cadsok.order.data.adapter;
 
+import cadsok.order.data.entities.StreetAddressEntity;
+import cadsok.order.data.mapper.DeliveryAddressMapper;
+import cadsok.order.data.repositories.StreetAddressJpaRepository;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.data.entities.OrderEntity;
 import cadsok.order.data.mapper.OrderMapper;
@@ -15,14 +18,18 @@ import java.util.Optional;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
+    private final StreetAddressJpaRepository streetAddressJpaRepository;
 
-    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository) {
+    public OrderRepositoryImpl(OrderJpaRepository orderJpaRepository, StreetAddressJpaRepository streetAddressJpaRepository) {
         this.orderJpaRepository = orderJpaRepository;
+        this.streetAddressJpaRepository = streetAddressJpaRepository;
     }
 
     @Override
     public Order save(Order order) {
-        OrderEntity orderEntity = OrderMapper.toOrderEntity(order);
+        StreetAddressEntity deliveryAddress = DeliveryAddressMapper.toEntity(order.getDeliveryAddress());
+        StreetAddressEntity savedAddress = streetAddressJpaRepository.save(deliveryAddress);
+        OrderEntity orderEntity = OrderMapper.toOrderEntity(order, savedAddress);
         orderJpaRepository.save(orderEntity);
         return OrderMapper.toOrder(orderEntity);
     }

@@ -24,7 +24,7 @@ public class RestaurantMapper {
         return Restaurant.Builder.builder()
                 .id(new RestaurantId(restaurantEntity.getId()))
                 .products(
-                        restaurantEntity.getProducts().stream().filter(Objects::isNull)
+                        restaurantEntity.getProducts().stream().filter(Objects::nonNull)
                                 .map(ProductMapper::toProduct).collect(Collectors.toList())
                 )
                 .active(restaurantEntity.isActive())

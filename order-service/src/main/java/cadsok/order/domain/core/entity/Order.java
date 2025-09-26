@@ -28,7 +28,6 @@ public class Order extends AggregateRoot<OrderId> {
         trackingId = new TrackingId(UUID.randomUUID());
         orderStatus = OrderStatus.PENDING;
         initializeOrderItems();
-        validateOrder();
     }
 
     public void validateOrder() {
@@ -70,9 +69,8 @@ public class Order extends AggregateRoot<OrderId> {
     }
 
     private void initializeOrderItems() {
-        long itemId = 1;
         for (OrderItem orderItem : items) {
-            orderItem.initializeOrderItem(this.getId(), itemId++);
+            orderItem.initializeOrderItem(this.getId(), UUID.randomUUID());
         }
     }
 
@@ -181,7 +179,6 @@ public class Order extends AggregateRoot<OrderId> {
         private TrackingId trackingId;
         private OrderStatus orderStatus;
         private List<String> failureMessages;
-        private StreetAddress deliveryAddress;
 
         private Builder() {
         }
@@ -196,7 +193,7 @@ public class Order extends AggregateRoot<OrderId> {
         }
 
         public Builder deliveryAddress(StreetAddress val) {
-            deliveryAddress = val;
+            streetAddress = val;
             return this;
         }
 

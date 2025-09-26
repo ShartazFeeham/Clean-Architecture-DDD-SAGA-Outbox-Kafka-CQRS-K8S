@@ -5,6 +5,8 @@ import commonmodule.domain.values.Money;
 import commonmodule.domain.values.OrderId;
 import cadsok.order.domain.core.values.OrderItemId;
 
+import java.util.UUID;
+
 public class OrderItem extends BaseEntity<OrderItemId> {
 
     private OrderId orderId;
@@ -45,7 +47,7 @@ public class OrderItem extends BaseEntity<OrderItemId> {
         return subTotal;
     }
 
-    void initializeOrderItem(OrderId orderId, Long orderItemId) {
+    void initializeOrderItem(OrderId orderId, UUID orderItemId) {
         setOrderId(orderId);
         super.setId(new OrderItemId(orderItemId));
     }

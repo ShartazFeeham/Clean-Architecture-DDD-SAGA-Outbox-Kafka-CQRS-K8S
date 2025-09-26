@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Builder
 @Entity
-public class StreetAddressEntity extends BaseEntityUUID {
+public class StreetAddressEntity extends BaseEntity {
     @Column(updatable = false)
     private String street;
     @Column(updatable = false)

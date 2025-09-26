@@ -2,6 +2,7 @@ package cadsok.order.data.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-public class OrderItemEntity extends BaseEntityLong {
+public class OrderItemEntity extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private UUID productId;
     private String productName;
@@ -27,4 +28,6 @@ public class OrderItemEntity extends BaseEntityLong {
     private String price;
     @Column(updatable = false, nullable = false)
     private String subTotal;
+    @ManyToOne
+    private OrderEntity order;
 }
