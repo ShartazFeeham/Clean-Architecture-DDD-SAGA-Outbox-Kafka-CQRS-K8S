@@ -1,6 +1,6 @@
 package cadsok.order.messaging.adapter.publisher.payment;
 
-import cadsok.order.application.service.ports.output.message.publisher.payment.OrderCancelledPaymentRequestMessagePublisher;
+import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCancelledPaymentRequestMessagePublisher;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.messaging.service.OrderEventProducerService;
 import org.springframework.kafka.core.KafkaTemplate;
