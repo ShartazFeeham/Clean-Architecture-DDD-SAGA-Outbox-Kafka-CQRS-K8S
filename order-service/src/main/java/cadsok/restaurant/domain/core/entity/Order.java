@@ -16,7 +16,7 @@ public class Order extends AggregateRoot<OrderId> {
     private final RestaurantId restaurantId;
     private TrackingId trackingId;
     // Order details: stats
-    private final Money price;;
+    private final Money price;
     private OrderStatus orderStatus;
     private final StreetAddress deliveryAddress;
     // Order details: items
