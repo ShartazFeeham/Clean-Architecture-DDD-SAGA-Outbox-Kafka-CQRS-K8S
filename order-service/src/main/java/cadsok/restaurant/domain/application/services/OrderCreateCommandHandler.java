@@ -53,9 +53,7 @@ class OrderCreateCommandHandler {
         log.info("Order created with id {}", orderCreatedEvent.getOrder().getId().getValue());
         applicationDomainEventPublisher.publish(orderCreatedEvent);
         CreateOrderResponse createOrderResponse = orderDomainMapper.orderToCreateOrderResponse(
-                orderCreatedEvent.getOrder(),
-                "Order created successfully"
-        );
+                orderCreatedEvent.getOrder(), "Order created successfully");
 
         // TODO: payment outbox
 
