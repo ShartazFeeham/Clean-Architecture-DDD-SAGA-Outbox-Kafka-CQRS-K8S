@@ -9,6 +9,8 @@ import cadsok.restaurant.domain.core.event.OrderPaidEvent;
 import cadsok.restaurant.domain.core.exception.OrderNotFoundException;
 import cadsok.restaurant.domain.core.services.OrderDomainService;
 import commonmodule.domain.values.OrderId;
+import commonmodule.infra.logging.Auditable;
+import commonmodule.infra.logging.LogAction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -34,29 +36,28 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
     }
 
     @Override
+    @Auditable(action = "PAYMENT_COMPLETED", resource = "Payment")
+    @LogAction(value = "Processing payment completion", identifiers = {"orderId"})
     public void paymentCompleted(PaymentResponse paymentResponse) {
         Order order = getOrder(paymentResponse);
         OrderPaidEvent orderPaidEvent = orderDomainService.payOrder(order);
         orderRepository.save(order);
-        log.info("Order with id {} has been paid", order.getId().getValue());
         orderPaidRestaurantRequestMessagePublisher.publish(orderPaidEvent);
     }
 
     @Override
+    @LogAction(value = "Processing payment cancellation", identifiers = {"orderId"})
     public void paymentCancelled(PaymentResponse paymentResponse) {
         Order order = getOrder(paymentResponse);
         orderDomainService.cancelOrder(order, paymentResponse.getFailureMessages());
         orderRepository.save(order);
-        log.info("Order with id {} has been cancelled", order.getId().getValue());
     }
 
     private Order getOrder(PaymentResponse paymentResponse) {
         String orderIdStr = paymentResponse.getOrderId();
         UUID orderIdUUID = UUID.fromString(paymentResponse.getOrderId());
-        log.info("Received order approved message for order id: {}", orderIdUUID);
         Optional<Order> orderOp = orderRepository.findById(new OrderId(orderIdUUID));
         if (orderOp.isEmpty()) {
-            log.error("Order with id {} not found", orderIdStr);
             throw new OrderNotFoundException("Order with id " + orderIdStr + " not found");
         }
         return orderOp.get();

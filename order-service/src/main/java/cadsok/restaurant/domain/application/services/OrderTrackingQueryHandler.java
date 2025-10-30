@@ -7,13 +7,12 @@ import cadsok.restaurant.domain.application.ports.output.repository.OrderReposit
 import cadsok.restaurant.domain.core.entity.Order;
 import cadsok.restaurant.domain.core.exception.OrderNotFoundException;
 import cadsok.restaurant.domain.core.values.TrackingId;
-import lombok.extern.slf4j.Slf4j;
+import commonmodule.infra.logging.LogAction;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Slf4j
 @Component
 public class OrderTrackingQueryHandler {
 
@@ -26,11 +25,11 @@ public class OrderTrackingQueryHandler {
     }
 
     @Transactional(readOnly = true)
+    @LogAction(value = "Tracking order status", identifiers = {"trackingId"})
     public TrackOrderResponse trackOrder(TrackOrderQuery trackOrderQuery) {
         Optional<Order> orderResult =
                 orderRepository.findByTrackingId(new TrackingId(trackOrderQuery.getOrderTrackingId()));
         if (orderResult.isEmpty()) {
-            log.warn("Could not find order with tracking id: {}", trackOrderQuery.getOrderTrackingId());
             throw new OrderNotFoundException("Could not find order with tracking id: " +
                     trackOrderQuery.getOrderTrackingId());
         }

@@ -12,6 +12,8 @@ import cadsok.restaurant.domain.core.entity.Restaurant;
 import cadsok.restaurant.domain.core.event.OrderCreatedEvent;
 import cadsok.restaurant.domain.core.exception.OrderDomainException;
 import cadsok.restaurant.domain.core.services.OrderDomainService;
+import commonmodule.infra.logging.Auditable;
+import commonmodule.infra.logging.LogAction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,16 +50,16 @@ class OrderCreateCommandHandler {
     }
 
     @Transactional
+    @Auditable(action = "ORDER_CREATED", resource = "Order")
+    @LogAction(value = "Creating order", identifiers = {"customerId", "restaurantId"})
     public CreateOrderResponse createOrder(CreateOrderCommand command) {
         OrderCreatedEvent orderCreatedEvent = persistOrder(command);
-        log.info("Order created with id {}", orderCreatedEvent.getOrder().getId().getValue());
         applicationDomainEventPublisher.publish(orderCreatedEvent);
         CreateOrderResponse createOrderResponse = orderDomainMapper.orderToCreateOrderResponse(
                 orderCreatedEvent.getOrder(), "Order created successfully");
 
         // TODO: payment outbox
 
-        log.info("CreateOrderResponse: {}", createOrderResponse);
         return createOrderResponse;
     }
 
@@ -68,7 +70,6 @@ class OrderCreateCommandHandler {
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderCommand);
         OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitiateOrder(order, restaurant);
         saveOrder(order);
-        log.info("Order is placed with id: {}", orderCreatedEvent.getOrder().getId().getValue());
         return orderCreatedEvent;
     }
 
@@ -76,7 +77,6 @@ class OrderCreateCommandHandler {
         Restaurant restaurant = orderDataMapper.createOrderCommandToRestaurant(createOrderCommand);
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findRestaurantInformation(restaurant);
         if (optionalRestaurant.isEmpty()) {
-            log.warn("Could not find restaurant with restaurant id: {}", createOrderCommand.getRestaurantId());
             throw new OrderDomainException("Could not find restaurant with restaurant id: " +
                     createOrderCommand.getRestaurantId());
         }
@@ -86,17 +86,14 @@ class OrderCreateCommandHandler {
     private void checkCustomer(UUID customerId) {
         Optional<Customer> customer = customerRepository.findCustomerById(customerId);
         if (customer.isEmpty()) {
-            log.warn("Could not find customer with customer id: {}", customerId);
-            throw new OrderDomainException("Could not find customer with customer id: " + customer);
+            throw new OrderDomainException("Could not find customer with customer id: " + customerId);
         }
     }
 
     private void saveOrder(Order order) {
         Order orderResult = orderRepository.save(order);
         if (orderResult == null) {
-            log.error("Could not save order!");
             throw new OrderDomainException("Could not save order!");
         }
-        log.info("Order is saved with id: {}", orderResult.getId().getValue());
     }
 }

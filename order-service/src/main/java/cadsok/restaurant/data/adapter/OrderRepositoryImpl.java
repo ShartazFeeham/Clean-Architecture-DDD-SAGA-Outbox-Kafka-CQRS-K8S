@@ -10,6 +10,7 @@ import cadsok.restaurant.data.repositories.OrderJpaRepository;
 import cadsok.restaurant.domain.core.entity.Order;
 import cadsok.restaurant.domain.core.values.TrackingId;
 import commonmodule.domain.values.OrderId;
+import commonmodule.infra.logging.LogAction;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    @LogAction(value = "Saving order in database", identifiers = {"orderId"})
     public Order save(Order order) {
         StreetAddressEntity deliveryAddress = DeliveryAddressMapper.toEntity(order.getDeliveryAddress());
         StreetAddressEntity savedAddress = streetAddressJpaRepository.save(deliveryAddress);
@@ -35,6 +37,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    @LogAction(value = "Finding order by id in database", identifiers = {"orderId"})
     public Optional<Order> findById(OrderId orderId) {
         Optional<OrderEntity> orderEntityOp = orderJpaRepository.findById(orderId.getValue());
         if (orderEntityOp.isEmpty()) {
@@ -44,6 +47,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    @LogAction(value = "Finding order by tracking id in database", identifiers = {"trackingId"})
     public Optional<Order> findByTrackingId(TrackingId trackingId) {
         Optional<OrderEntity> orderOp = orderJpaRepository.findByTrackingId(trackingId.getValue());
         if (orderOp.isEmpty()) {

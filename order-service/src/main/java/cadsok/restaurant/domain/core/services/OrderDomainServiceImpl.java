@@ -1,6 +1,7 @@
 package cadsok.restaurant.domain.core.services;
 
 import commonmodule.domain.values.DateTimeUtil;
+import commonmodule.infra.logging.LogAction;
 import cadsok.restaurant.domain.core.entity.Order;
 import cadsok.restaurant.domain.core.entity.Product;
 import cadsok.restaurant.domain.core.entity.Restaurant;
@@ -8,8 +9,6 @@ import cadsok.restaurant.domain.core.event.OrderCancelledEvent;
 import cadsok.restaurant.domain.core.event.OrderCreatedEvent;
 import cadsok.restaurant.domain.core.event.OrderPaidEvent;
 import cadsok.restaurant.domain.core.exception.OrderDomainException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,15 +16,13 @@ import java.util.List;
 @Service
 public class OrderDomainServiceImpl implements OrderDomainService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderDomainServiceImpl.class);
-
     @Override
+    @LogAction(value = "Initializing order", identifiers = {"orderId"})
     public OrderCreatedEvent validateAndInitiateOrder(Order order, Restaurant restaurant) {
         validateRestaurant(restaurant);
         setOrderProductInformation(order, restaurant);
         order.validateOrder();
         order.initializeOrder();
-        LOG.info("Order with id: {} has been initiated", order.getId().getValue());
         return new OrderCreatedEvent(order, DateTimeUtil.now());
     }
 
@@ -45,29 +42,29 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
+    @LogAction(value = "Paying order", identifiers = {"orderId"})
     public OrderPaidEvent payOrder(Order order) {
         order.pay();
-        LOG.info("Order with id: {} has been paid", order.getId().getValue());
         return new OrderPaidEvent(order, DateTimeUtil.now());
     }
 
     @Override
+    @LogAction(value = "Approving order", identifiers = {"orderId"})
     public void approveOrder(Order order) {
         order.approve();
-        LOG.info("Order with id: {} has been approved", order.getId().getValue());
     }
 
     @Override
+    @LogAction(value = "Cancelling order payment", identifiers = {"orderId"})
     public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
         order.initCancel(failureMessages);
-        LOG.info("Order payment with id: {} has been cancelled", order.getId().getValue());
         return new OrderCancelledEvent(order, DateTimeUtil.now());
     }
 
     @Override
+    @LogAction(value = "Cancelling order", identifiers = {"orderId"})
     public void cancelOrder(Order order, List<String> failureMessages) {
         order.cancel(failureMessages);
-        LOG.info("Order with id: {} has been cancelled", order.getId().getValue());
     }
 
 }

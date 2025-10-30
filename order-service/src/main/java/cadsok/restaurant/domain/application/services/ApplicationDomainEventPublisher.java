@@ -1,13 +1,12 @@
 package cadsok.restaurant.domain.application.services;
 
 import commonmodule.domain.events.publisher.DomainEventPublisher;
+import commonmodule.infra.logging.LogAction;
 import cadsok.restaurant.domain.core.event.OrderCreatedEvent;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class ApplicationDomainEventPublisher implements ApplicationEventPublisherAware, DomainEventPublisher<OrderCreatedEvent> {
 
@@ -19,8 +18,8 @@ public class ApplicationDomainEventPublisher implements ApplicationEventPublishe
     }
 
     @Override
+    @LogAction("Publishing order created event internally")
     public void publish(OrderCreatedEvent event) {
         this.applicationEventPublisher.publishEvent(event);
-        log.info("OrderCreatedEvent has been published for order id: {}", event.getOrder().getId().getValue());
     }
 }
