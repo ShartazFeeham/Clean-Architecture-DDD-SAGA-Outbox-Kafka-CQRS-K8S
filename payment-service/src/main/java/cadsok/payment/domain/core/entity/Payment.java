@@ -41,6 +41,10 @@ public class Payment extends AggregateRoot<OrderId> {
         return price;
     }
 
+    public void process() {
+        this.paymentStatus = PaymentStatus.PROCESSING;
+    }
+
     public void validate() {
         if (orderId == null || orderId.getValue() == null) {
             throw new PaymentDomainException("Invalid orderId, must not be null.");
@@ -55,7 +59,7 @@ public class Payment extends AggregateRoot<OrderId> {
 
     public void initialize() {
         this.paymentId = new PaymentId(UUID.randomUUID());
-        this.paymentStatus = PaymentStatus.PROCESSING;
+        this.paymentStatus = PaymentStatus.INITIALIZED;
     }
 
     public void pay() {

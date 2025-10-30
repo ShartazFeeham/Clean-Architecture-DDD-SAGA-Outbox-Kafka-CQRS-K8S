@@ -9,7 +9,7 @@ import cadsok.payment.domain.application.ports.output.repository.PaymentReposito
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentCancelledEvent;
 import cadsok.payment.domain.core.event.PaymentCompleteEvent;
-import cadsok.payment.domain.core.event.PaymentInfoVerificationEvent;
+import cadsok.payment.domain.core.event.PaymentInfoInitializedEvent;
 import cadsok.payment.domain.core.exception.PaymentDomainException;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
@@ -46,7 +46,7 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
     @Override
     public PaymentResponseDto initPay(PaymentCreateRequestDto paymentCreateRequestDto) {
         Payment payment = PaymentMapper.toPayment(paymentCreateRequestDto);
-        PaymentInfoVerificationEvent event = paymentDomainService.verifyPaymentInfo(payment);
+        PaymentInfoInitializedEvent event = paymentDomainService.verifyPaymentInfo(payment);
         payment = paymentRepository.savePayment(payment);
         log.info("Payment is initialized and saved in database.");
         applicationDomainEventPublisher.publish(event);

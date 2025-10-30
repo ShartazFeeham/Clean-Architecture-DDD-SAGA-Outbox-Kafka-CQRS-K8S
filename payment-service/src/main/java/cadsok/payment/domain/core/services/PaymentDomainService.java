@@ -1,15 +1,17 @@
 package cadsok.payment.domain.core.services;
 
 import cadsok.payment.domain.core.entity.Payment;
-import cadsok.payment.domain.core.event.PaymentCancelledEvent;
-import cadsok.payment.domain.core.event.PaymentCompleteEvent;
-import cadsok.payment.domain.core.event.PaymentInfoVerificationEvent;
+import cadsok.payment.domain.core.event.*;
 
 public interface PaymentDomainService {
 
-    PaymentInfoVerificationEvent verifyPaymentInfo(Payment payment);
+    PaymentInfoInitializedEvent initializePayment(Payment payment);
 
-    PaymentCompleteEvent pay(Payment payment);
+    PaymentProcessingEvent verifyAndProcessEvent(Payment payment);
+
+    PaymentCompleteEvent completePayment(Payment payment);
+
+    PaymentFailedEvent failedPayment(Payment payment);
 
     PaymentCancelledEvent cancel(Payment payment);
 

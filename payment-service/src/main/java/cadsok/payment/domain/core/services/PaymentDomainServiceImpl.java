@@ -1,26 +1,35 @@
 package cadsok.payment.domain.core.services;
 
 import cadsok.payment.domain.core.entity.Payment;
-import cadsok.payment.domain.core.event.PaymentCancelledEvent;
-import cadsok.payment.domain.core.event.PaymentCompleteEvent;
-import cadsok.payment.domain.core.event.PaymentInfoVerificationEvent;
+import cadsok.payment.domain.core.event.*;
 import commonmodule.domain.values.DateTimeUtil;
-import org.springframework.stereotype.Service;
 
-@Service
 public class PaymentDomainServiceImpl implements PaymentDomainService {
 
     @Override
-    public PaymentInfoVerificationEvent verifyPaymentInfo(Payment payment) {
+    public PaymentInfoInitializedEvent initializePayment(Payment payment) {
         payment.validate();
+        ;
         payment.initialize();
-        return new PaymentInfoVerificationEvent(payment, DateTimeUtil.now());
+        return new PaymentInfoInitializedEvent(payment, DateTimeUtil.now());
     }
 
     @Override
-    public PaymentCompleteEvent pay(Payment payment) {
+    public PaymentProcessingEvent verifyAndProcessEvent(Payment payment) {
+        payment.process();
+        return new PaymentProcessingEvent(payment, DateTimeUtil.now());
+    }
+
+    @Override
+    public PaymentCompleteEvent completePayment(Payment payment) {
         payment.pay();
         return new PaymentCompleteEvent(payment, DateTimeUtil.now());
+    }
+
+    @Override
+    public PaymentFailedEvent failedPayment(Payment payment) {
+        payment.fail();
+        return new PaymentFailedEvent(payment, DateTimeUtil.now());
     }
 
     @Override
