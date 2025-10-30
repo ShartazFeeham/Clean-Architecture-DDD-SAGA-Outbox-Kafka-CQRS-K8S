@@ -1,4 +1,4 @@
-package cadsok.restaurant.infra.aop;
+package commonmodule.infra.aop;
 
 import commonmodule.infra.logging.Auditable;
 import org.aspectj.lang.JoinPoint;

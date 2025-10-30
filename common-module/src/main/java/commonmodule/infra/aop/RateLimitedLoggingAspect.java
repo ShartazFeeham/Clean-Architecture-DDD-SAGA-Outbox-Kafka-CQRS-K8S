@@ -1,4 +1,4 @@
-package cadsok.restaurant.infra.aop;
+package commonmodule.infra.aop;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -14,9 +14,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * Rate-limiting aspect to prevent log storms.
  * Limits the number of error logs per method to prevent flooding the log system
  * in case of repeated failures (e.g., database connection issues, infinite loops).
+ * 
+ * Note: Excludes commonmodule.infra.aop package to avoid recursive logging.
  */
 @Aspect
-@Component
+// @Component  // Disabled temporarily - too broad pointcut
 public class RateLimitedLoggingAspect {
 
     private static final Logger log = LoggerFactory.getLogger(RateLimitedLoggingAspect.class);
@@ -29,10 +31,13 @@ public class RateLimitedLoggingAspect {
     private static final long MAX_LOGS_PER_WINDOW = 10; // Max 10 error logs per minute per method
     
     /**
-     * Intercepts exceptions and applies rate limiting to error logs
+     * Intercepts exceptions and applies rate limiting to error logs.
+     * Only matches application packages (domain, data, messaging, application layers).
      */
     @AfterThrowing(
-        pointcut = "within(cadsok.restaurant..*) && !within(cadsok.restaurant.infra.aop..*)",
+        pointcut = "(execution(* *..*..domain..*(..)) || execution(* *..*..data..*(..)) || " +
+                   "execution(* *..*..messaging..*(..)) || execution(* *..*..application..*(..))) && " +
+                   "!within(commonmodule.infra.aop..*)",
         throwing = "exception"
     )
     public void rateLimitedErrorLog(JoinPoint joinPoint, Throwable exception) {

@@ -1,4 +1,4 @@
-package cadsok.restaurant.infra.aop;
+package commonmodule.infra.aop;
 
 import commonmodule.infra.logging.LogAction;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -239,7 +239,7 @@ public class ActionLoggingAspect {
             return "Application";
         } else {
             // Default fallback
-            return "Service";
+            return "Other";
         }
     }
 }
