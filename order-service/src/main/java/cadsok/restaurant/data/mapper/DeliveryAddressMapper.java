@@ -21,10 +21,9 @@ public class DeliveryAddressMapper {
             return null;
         }
         return new StreetAddress(
-                entity.getId(),
                 entity.getStreet(),
-                entity.getCity(),
-                entity.getPostalCode()
+                entity.getPostalCode(),
+                entity.getCity()
         );
     }
 

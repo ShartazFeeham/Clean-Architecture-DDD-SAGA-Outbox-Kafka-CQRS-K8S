@@ -70,7 +70,6 @@ public class OrderDataMapper {
 
     private StreetAddress orderAddressToStreetAddress(OrderAddress orderAddress) {
         return new StreetAddress(
-                UUID.randomUUID(),
                 orderAddress.getStreet(),
                 orderAddress.getPostalCode(),
                 orderAddress.getCity()

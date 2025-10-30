@@ -142,7 +142,7 @@ public class Order extends AggregateRoot<OrderId> {
     }
 
     public List<OrderItem> getItems() {
-        return items;
+        return java.util.Collections.unmodifiableList(items);
     }
 
     public TrackingId getTrackingId() {
@@ -154,19 +154,7 @@ public class Order extends AggregateRoot<OrderId> {
     }
 
     public List<String> getFailureMessages() {
-        return failureMessages;
-    }
-
-    public void setTrackingId(TrackingId trackingId) {
-        this.trackingId = trackingId;
-    }
-
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public void setFailureMessages(List<String> failureMessages) {
-        this.failureMessages = failureMessages;
+        return failureMessages != null ? java.util.Collections.unmodifiableList(failureMessages) : null;
     }
 
     public static final class Builder {

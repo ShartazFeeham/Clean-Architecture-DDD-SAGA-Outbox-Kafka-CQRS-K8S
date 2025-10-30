@@ -62,10 +62,9 @@ public class OrderMapper {
                 .orderStatus(OrderStatusMapper.toDomainStatus(orderEntity.getOrderStatus()))
                 .deliveryAddress(
                         new StreetAddress(
-                                orderEntity.getDeliveryAddress().getId(),
                                 orderEntity.getDeliveryAddress().getStreet(),
-                                orderEntity.getDeliveryAddress().getCity(),
-                                orderEntity.getDeliveryAddress().getPostalCode()
+                                orderEntity.getDeliveryAddress().getPostalCode(),
+                                orderEntity.getDeliveryAddress().getCity()
                         )
                 )
                 .items(orderEntity.getItems().stream().map(OrderItemMapper::toOrderItem).toList())
