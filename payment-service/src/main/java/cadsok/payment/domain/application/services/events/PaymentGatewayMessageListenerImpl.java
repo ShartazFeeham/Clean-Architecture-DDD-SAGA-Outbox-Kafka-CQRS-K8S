@@ -1,15 +1,15 @@
-package cadsok.payment.domain.application.services;
+package cadsok.payment.domain.application.services.events;
 
-import cadsok.payment.domain.application.mapper.PaymentMapper;
-import cadsok.payment.domain.application.models.PaymentCreateRequestDto;
-import cadsok.payment.domain.application.models.PaymentTrackingResponseDto;
-import cadsok.payment.domain.application.ports.input.client.PaymentApplicationService;
+import cadsok.payment.domain.application.models.PaymentGatewayRequestDto;
+import cadsok.payment.domain.application.ports.input.event.PaymentGatewayMessageListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
+import cadsok.payment.domain.application.services.ApplicationDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
-import cadsok.payment.domain.core.event.PaymentInitializedEvent;
+import cadsok.payment.domain.core.event.PaymentEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
 import cadsok.payment.domain.core.values.PaymentId;
+import commonmodule.domain.values.PaymentStatus;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
@@ -20,25 +20,27 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentApplicationServiceImpl implements PaymentApplicationService {
+public class PaymentGatewayMessageListenerImpl implements PaymentGatewayMessageListener {
 
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
     private final ApplicationDomainEventPublisher applicationDomainEventPublisher;
 
     @Override
-    public PaymentTrackingResponseDto track(String paymentId) {
-        return PaymentMapper.toResponse(getPaymentIfExist(paymentId));
-    }
+    @LogAction(value = "Handling payment-gateway response event.")
+    public void handlePaymentGatewayResponse(PaymentGatewayRequestDto paymentCancelRequestDto) {
+        String paymentIdStr = paymentCancelRequestDto.paymentId();
+        Payment payment = getPaymentIfExist(paymentIdStr);
 
-    @Override
-    @LogAction("Initializing payment.")
-    public PaymentTrackingResponseDto initializePayment(PaymentCreateRequestDto paymentCreateRequestDto) {
-        Payment payment = PaymentMapper.toPayment(paymentCreateRequestDto);
-        PaymentInitializedEvent event = paymentDomainService.initializePayment(payment);
-        payment = paymentRepository.savePayment(payment);
+        PaymentEvent event;
+        if (paymentCancelRequestDto.paymentStatus() == PaymentStatus.COMPLETED) {
+            event = paymentDomainService.completePayment(payment);
+        } else {
+            event = paymentDomainService.failedPayment(payment);
+        }
+
         applicationDomainEventPublisher.publish(event);
-        return PaymentMapper.toResponse(payment);
+        paymentRepository.savePayment(payment);
     }
 
     private Payment getPaymentIfExist(String paymentId) {
@@ -51,5 +53,4 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
         }
         return paymentOp.get();
     }
-
 }

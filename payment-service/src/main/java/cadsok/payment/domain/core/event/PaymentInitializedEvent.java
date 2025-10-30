@@ -4,8 +4,8 @@ import cadsok.payment.domain.core.entity.Payment;
 
 import java.time.ZonedDateTime;
 
-public class PaymentInfoInitializedEvent extends PaymentEvent {
-    public PaymentInfoInitializedEvent(Payment payment, ZonedDateTime createdAt) {
+public class PaymentInitializedEvent extends PaymentEvent {
+    public PaymentInitializedEvent(Payment payment, ZonedDateTime createdAt) {
         super(payment, createdAt);
     }
 }

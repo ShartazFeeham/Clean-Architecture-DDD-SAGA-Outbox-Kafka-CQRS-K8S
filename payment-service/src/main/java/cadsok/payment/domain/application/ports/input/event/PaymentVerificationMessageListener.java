@@ -1,7 +1,9 @@
 package cadsok.payment.domain.application.ports.input.event;
 
+import cadsok.payment.domain.application.models.PaymentInfoVarificationDto;
+
 public interface PaymentVerificationMessageListener {
 
-    void verificationComplete(String paymentId);
+    void handleVerificationResponse(PaymentInfoVarificationDto paymentInfoVarificationDto);
 
 }

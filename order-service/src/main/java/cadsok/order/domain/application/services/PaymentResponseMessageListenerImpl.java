@@ -11,7 +11,6 @@ import cadsok.order.domain.core.services.OrderDomainService;
 import commonmodule.domain.values.OrderId;
 import commonmodule.infra.logging.Auditable;
 import commonmodule.infra.logging.LogAction;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -20,7 +19,6 @@ import java.util.UUID;
 
 @Validated
 @Service
-@Slf4j
 public class PaymentResponseMessageListenerImpl implements PaymentResponseMessageListener {
 
     private final OrderRepository orderRepository;

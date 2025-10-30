@@ -7,11 +7,10 @@ import commonmodule.domain.values.DateTimeUtil;
 public class PaymentDomainServiceImpl implements PaymentDomainService {
 
     @Override
-    public PaymentInfoInitializedEvent initializePayment(Payment payment) {
+    public PaymentInitializedEvent initializePayment(Payment payment) {
         payment.validate();
-        ;
         payment.initialize();
-        return new PaymentInfoInitializedEvent(payment, DateTimeUtil.now());
+        return new PaymentInitializedEvent(payment, DateTimeUtil.now());
     }
 
     @Override

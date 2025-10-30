@@ -1,7 +1,7 @@
 package cadsok.payment.domain.application.mapper;
 
 import cadsok.payment.domain.application.models.PaymentCreateRequestDto;
-import cadsok.payment.domain.application.models.PaymentResponseDto;
+import cadsok.payment.domain.application.models.PaymentTrackingResponseDto;
 import cadsok.payment.domain.core.entity.Payment;
 import commonmodule.domain.values.CustomerId;
 import commonmodule.domain.values.Money;
@@ -13,13 +13,13 @@ import java.util.UUID;
 public class PaymentMapper {
 
     public static Payment toPayment(PaymentCreateRequestDto request) {
-        return new Payment(new OrderId(UUID.fromString(request.getOrderId())),
-                new CustomerId(UUID.fromString(request.getCustomerId())),
-                new Money(new BigDecimal(request.getPrice())));
+        return new Payment(new OrderId(UUID.fromString(request.orderId())),
+                new CustomerId(UUID.fromString(request.customerId())),
+                new Money(new BigDecimal(request.price())));
     }
 
-    public static PaymentResponseDto toResponse(Payment payment) {
-        return PaymentResponseDto.builder()
+    public static PaymentTrackingResponseDto toResponse(Payment payment) {
+        return PaymentTrackingResponseDto.builder()
                 .paymentId(payment.getPaymentId().getValue().toString())
                 .orderId(payment.getOrderId().getValue().toString())
                 .customerId(payment.getCustomerId().getValue().toString())
