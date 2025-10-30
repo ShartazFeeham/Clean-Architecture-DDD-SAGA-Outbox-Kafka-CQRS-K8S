@@ -3,6 +3,7 @@ package cadsok.restaurant.data.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "order_items")
 public class OrderItemEntity extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private UUID productId;

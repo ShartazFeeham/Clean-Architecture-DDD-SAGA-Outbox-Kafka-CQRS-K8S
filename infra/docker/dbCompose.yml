@@ -1,4 +1,5 @@
 version: "3.8"
+name: "C.A.D.S.O.K."
 services:
 
   # Postgres database for order-service

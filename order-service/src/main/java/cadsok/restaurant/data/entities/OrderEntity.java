@@ -17,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "orders")
 public class OrderEntity extends BaseEntity {
 
     // Reference IDs

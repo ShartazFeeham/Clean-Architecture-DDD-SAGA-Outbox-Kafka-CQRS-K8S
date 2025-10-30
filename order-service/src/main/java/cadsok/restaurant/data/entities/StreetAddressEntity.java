@@ -2,6 +2,7 @@ package cadsok.restaurant.data.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "addresses")
 public class StreetAddressEntity extends BaseEntity {
     @Column(updatable = false)
     private String street;
