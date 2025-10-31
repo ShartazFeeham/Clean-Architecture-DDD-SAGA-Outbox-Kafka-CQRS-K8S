@@ -23,7 +23,7 @@ abstract class KafkaProducerService<T extends DomainEvent<?>> {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    abstract protected String getTopicName(String topicName);
+    abstract protected String getTopicName();
 
     abstract public void publish(T event);
 

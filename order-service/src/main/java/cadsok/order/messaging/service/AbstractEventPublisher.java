@@ -3,17 +3,13 @@ package cadsok.order.messaging.service;
 import cadsok.order.domain.core.event.OrderEvent;
 import commonmodule.infra.logging.LogAction;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.UUID;
 
-public class OrderEventProducerService<T extends OrderEvent> extends KafkaProducerService<T> {
+public abstract class AbstractEventPublisher<T extends OrderEvent> extends KafkaProducerService<T> {
 
-    @Value("${kafka.topic-names.order-events}")
-    private String topicName;
-
-    public OrderEventProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+    public AbstractEventPublisher(KafkaTemplate<String, String> kafkaTemplate) {
         super(kafkaTemplate);
     }
 
@@ -24,12 +20,9 @@ public class OrderEventProducerService<T extends OrderEvent> extends KafkaProduc
         // event in order with other events of the same order in same partition
         String key = UUID.randomUUID().toString();
         String data = super.getDataAsString(event);
-        ProducerRecord<String, String> record = new ProducerRecord<>(topicName, key, data);
+        ProducerRecord<String, String> record = new ProducerRecord<>(getTopicName(), key, data);
         super.send(record);
     }
 
-    @Override
-    protected String getTopicName() {
-        return topicName;
-    }
+    protected abstract String getTopicName();
 }

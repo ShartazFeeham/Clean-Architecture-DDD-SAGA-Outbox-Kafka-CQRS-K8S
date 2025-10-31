@@ -1,14 +1,12 @@
 package cadsok.order.messaging.adapter.publisher.payment;
 
 import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderPaymentValidatedMessagePublisher;
-import cadsok.order.domain.core.event.OrderCreatedEvent;
-import cadsok.order.domain.core.event.OrderPaymentValidEvent;
-import cadsok.order.messaging.service.OrderEventProducerService;
+import cadsok.order.messaging.service.OrderPaymentVarifiedEventPublisher;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderPaymentValidatedMessagePublisherImpl extends OrderEventProducerService<OrderPaymentValidEvent>
+public class OrderPaymentValidatedMessagePublisherImpl extends OrderPaymentVarifiedEventPublisher
         implements OrderPaymentValidatedMessagePublisher {
     public OrderPaymentValidatedMessagePublisherImpl(KafkaTemplate<String, String> kafkaTemplate) {
         super(kafkaTemplate);
