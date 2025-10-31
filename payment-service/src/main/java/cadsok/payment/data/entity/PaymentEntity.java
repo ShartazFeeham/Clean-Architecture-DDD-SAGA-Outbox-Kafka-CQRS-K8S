@@ -16,9 +16,7 @@ import java.util.UUID;
 @Table(name = "payments")
 public class PaymentEntity extends BaseEntity<UUID> {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID paymentId;
-
     private UUID orderId;
     private UUID customerId;
     private String price;

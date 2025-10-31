@@ -1,4 +1,4 @@
-package cadsok.payment.domain.application.services;
+package cadsok.payment.domain.application.services.events.base;
 
 import cadsok.payment.domain.core.event.PaymentEvent;
 import commonmodule.domain.events.publisher.DomainEventPublisher;
@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ApplicationDomainEventPublisher implements ApplicationEventPublisherAware, DomainEventPublisher<PaymentEvent> {
+public class PaymentApplicationInternalDomainEventPublisher implements ApplicationEventPublisherAware, DomainEventPublisher<PaymentEvent> {
 
     private ApplicationEventPublisher applicationEventPublisher;
 

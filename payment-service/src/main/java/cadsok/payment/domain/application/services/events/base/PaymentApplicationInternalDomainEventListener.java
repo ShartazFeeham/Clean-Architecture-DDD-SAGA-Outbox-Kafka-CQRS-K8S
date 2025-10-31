@@ -1,4 +1,4 @@
-package cadsok.payment.domain.application.services;
+package cadsok.payment.domain.application.services.events.base;
 
 import cadsok.payment.domain.application.ports.output.event.*;
 import cadsok.payment.domain.core.event.*;
@@ -9,7 +9,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class PaymentInitializedEventApplicationListener {
+public class PaymentApplicationInternalDomainEventListener {
 
     private final PaymentCancelMessagePublisher paymentCancelMessagePublisher;
     private final PaymentCompleteMessagePublisher paymentCompleteMessagePublisher;

@@ -3,7 +3,7 @@ package cadsok.payment.domain.application.services.events;
 import cadsok.payment.domain.application.models.PaymentGatewayRequestDto;
 import cadsok.payment.domain.application.ports.input.event.PaymentGatewayMessageListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.ApplicationDomainEventPublisher;
+import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
@@ -24,7 +24,7 @@ public class PaymentGatewayMessageListenerImpl implements PaymentGatewayMessageL
 
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final ApplicationDomainEventPublisher applicationDomainEventPublisher;
+    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
 
     @Override
     @LogAction(value = "Handling payment-gateway response event.")
@@ -39,7 +39,7 @@ public class PaymentGatewayMessageListenerImpl implements PaymentGatewayMessageL
             event = paymentDomainService.failedPayment(payment);
         }
 
-        applicationDomainEventPublisher.publish(event);
+        paymentApplicationInternalDomainEventPublisher.publish(event);
         paymentRepository.savePayment(payment);
     }
 

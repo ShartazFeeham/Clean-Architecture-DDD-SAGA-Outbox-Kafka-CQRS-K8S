@@ -5,9 +5,9 @@ import cadsok.payment.domain.application.models.PaymentCreateRequestDto;
 import cadsok.payment.domain.application.models.PaymentTrackingResponseDto;
 import cadsok.payment.domain.application.ports.input.client.PaymentApplicationService;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
+import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentInitializedEvent;
-import cadsok.payment.domain.core.exception.PaymentDomainException;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
 import cadsok.payment.domain.core.values.PaymentId;
@@ -26,7 +26,7 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
 
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final ApplicationDomainEventPublisher applicationDomainEventPublisher;
+    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
 
     @Override
     public PaymentTrackingResponseDto track(String paymentId) {
@@ -41,7 +41,7 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
         validateIfAlreadyAPaymentActiveForSameOrder(payment);
         PaymentInitializedEvent event = paymentDomainService.initializePayment(payment);
         payment = paymentRepository.savePayment(payment);
-        applicationDomainEventPublisher.publish(event);
+        paymentApplicationInternalDomainEventPublisher.publish(event);
         return PaymentMapper.toResponse(payment);
     }
 

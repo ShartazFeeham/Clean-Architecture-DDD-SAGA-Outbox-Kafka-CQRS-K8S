@@ -3,7 +3,7 @@ package cadsok.payment.domain.application.services.events;
 import cadsok.payment.domain.application.models.PaymentInfoVarificationDto;
 import cadsok.payment.domain.application.ports.input.event.PaymentVerificationMessageListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.ApplicationDomainEventPublisher;
+import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
@@ -23,7 +23,7 @@ public class PaymentVerificationMessageListenerImpl implements PaymentVerificati
 
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final ApplicationDomainEventPublisher applicationDomainEventPublisher;
+    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
 
     @Override
     @LogAction(value = "Handling payment-verification event.")
@@ -38,8 +38,8 @@ public class PaymentVerificationMessageListenerImpl implements PaymentVerificati
             event = paymentDomainService.failedPayment(payment);
         }
 
-        applicationDomainEventPublisher.publish(event);
         paymentRepository.savePayment(payment);
+        paymentApplicationInternalDomainEventPublisher.publish(event);
     }
 
     private Payment getPaymentIfExist(String paymentId) {

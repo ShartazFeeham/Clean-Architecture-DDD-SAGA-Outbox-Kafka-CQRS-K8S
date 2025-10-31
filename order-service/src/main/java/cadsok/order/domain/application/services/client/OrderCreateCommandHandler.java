@@ -6,7 +6,7 @@ import cadsok.order.domain.application.models.create.CreateOrderResponse;
 import cadsok.order.domain.application.ports.output.repository.CustomerRepository;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.domain.application.ports.output.repository.RestaurantRepository;
-import cadsok.order.domain.application.services.events.base.OrderServiceInternalDomainEventPublisher;
+import cadsok.order.domain.application.services.events.base.OrderApplicationInternalDomainEventPublisher;
 import cadsok.order.domain.core.entity.Customer;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Restaurant;
@@ -27,7 +27,7 @@ import java.util.UUID;
 class OrderCreateCommandHandler {
 
     private final OrderDataMapper orderDomainMapper;
-    private final OrderServiceInternalDomainEventPublisher orderServiceInternalDomainEventPublisher;
+    private final OrderApplicationInternalDomainEventPublisher orderApplicationInternalDomainEventPublisher;
     private final OrderDomainService orderDomainService;
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
@@ -35,14 +35,14 @@ class OrderCreateCommandHandler {
     private final OrderDataMapper orderDataMapper;
 
     OrderCreateCommandHandler(OrderDataMapper orderDomainMapper,
-                              OrderServiceInternalDomainEventPublisher orderServiceInternalDomainEventPublisher,
+                              OrderApplicationInternalDomainEventPublisher orderApplicationInternalDomainEventPublisher,
                               OrderDomainService orderDomainService,
                               OrderRepository orderRepository,
                               CustomerRepository customerRepository,
                               RestaurantRepository restaurantRepository,
                               OrderDataMapper orderDataMapper) {
         this.orderDomainMapper = orderDomainMapper;
-        this.orderServiceInternalDomainEventPublisher = orderServiceInternalDomainEventPublisher;
+        this.orderApplicationInternalDomainEventPublisher = orderApplicationInternalDomainEventPublisher;
         this.orderDomainService = orderDomainService;
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
@@ -55,7 +55,7 @@ class OrderCreateCommandHandler {
     @LogAction(value = "Creating order", identifiers = {"customerId", "restaurantId"})
     public CreateOrderResponse createOrder(CreateOrderCommand command) {
         OrderCreatedEvent orderCreatedEvent = persistOrder(command);
-        orderServiceInternalDomainEventPublisher.publish(orderCreatedEvent);
+        orderApplicationInternalDomainEventPublisher.publish(orderCreatedEvent);
         CreateOrderResponse createOrderResponse = orderDomainMapper.orderToCreateOrderResponse(
                 orderCreatedEvent.getOrder(), "Order created successfully");
 

@@ -55,12 +55,12 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderPaymentValidEvent validateAndPayOrder(Order order, Money amount) {
+    public OrderPaymentValidEvent validateAndPayOrder(Order order, Money amount, String paymentId) {
         if (amount.isGreaterThanZero() && amount.getAmount().equals(order.getPrice().getAmount())) {
             order.pay();
-            return new OrderPaymentValidEvent(order, DateTimeUtil.now(), true);
+            return new OrderPaymentValidEvent(order, DateTimeUtil.now(), true, paymentId);
         }
-        return new OrderPaymentValidEvent(order, DateTimeUtil.now(), false);
+        return new OrderPaymentValidEvent(order, DateTimeUtil.now(), false, paymentId);
     }
 
     @Override

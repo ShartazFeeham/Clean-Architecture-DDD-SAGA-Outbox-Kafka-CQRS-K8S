@@ -13,12 +13,16 @@ import java.util.UUID;
 public class PaymentDbMapper {
 
     public static PaymentEntity toEntity(Payment payment) {
-        return PaymentEntity.builder()
+        PaymentEntity entity = PaymentEntity.builder()
                 .orderId(UUID.fromString(payment.getOrderId().getValue().toString()))
                 .customerId(UUID.fromString(payment.getCustomerId().getValue().toString()))
                 .price(payment.getPrice().getAmount().toString())
                 .paymentStatus(payment.getPaymentStatus())
                 .build();
+        if (payment.getPaymentId() != null && payment.getPaymentId().getValue() != null) {
+            entity.setPaymentId(payment.getPaymentId().getValue());
+        }
+        return entity;
     }
 
     public static Payment toPayment(PaymentEntity paymentEntity) {

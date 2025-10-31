@@ -3,7 +3,7 @@ package cadsok.order.domain.application.services.events;
 import cadsok.order.domain.application.models.message.PaymentResponse;
 import cadsok.order.domain.application.ports.input.message.listener.payment.PaymentResponseMessageListener;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
-import cadsok.order.domain.application.services.events.base.OrderServiceInternalDomainEventPublisher;
+import cadsok.order.domain.application.services.events.base.OrderApplicationInternalDomainEventPublisher;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import cadsok.order.domain.core.exception.OrderNotFoundException;
@@ -26,23 +26,23 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
 
     private final OrderRepository orderRepository;
     private final OrderDomainService orderDomainService;
-    private final OrderServiceInternalDomainEventPublisher orderServiceInternalDomainEventPublisher;
+    private final OrderApplicationInternalDomainEventPublisher orderApplicationInternalDomainEventPublisher;
 
-    public PaymentResponseMessageListenerImpl(OrderRepository orderRepository, OrderDomainService orderDomainService, OrderServiceInternalDomainEventPublisher orderServiceInternalDomainEventPublisher) {
+    public PaymentResponseMessageListenerImpl(OrderRepository orderRepository, OrderDomainService orderDomainService, OrderApplicationInternalDomainEventPublisher orderApplicationInternalDomainEventPublisher) {
         this.orderRepository = orderRepository;
         this.orderDomainService = orderDomainService;
-        this.orderServiceInternalDomainEventPublisher = orderServiceInternalDomainEventPublisher;
+        this.orderApplicationInternalDomainEventPublisher = orderApplicationInternalDomainEventPublisher;
     }
 
     @Override
     @Auditable(action = "PAYMENT_COMPLETED", resource = "Payment")
     @LogAction(value = "Processing payment completion", identifiers = {"orderId"})
     @Transactional
-    public void paymentValidation(String orderId, String price) {
+    public void paymentValidation(String orderId, String price, String paymentId) {
         Order order = getOrder(orderId);
         orderRepository.updateStatus(order.getId(), OrderStatus.PAID);
-        OrderPaymentValidEvent orderValidatedEvent = orderDomainService.validateAndPayOrder(order, new Money(new BigDecimal(price)));
-        orderServiceInternalDomainEventPublisher.publish(orderValidatedEvent);
+        OrderPaymentValidEvent orderValidatedEvent = orderDomainService.validateAndPayOrder(order, new Money(new BigDecimal(price)), paymentId);
+        orderApplicationInternalDomainEventPublisher.publish(orderValidatedEvent);
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class OrderApplicationInternalEventsListener {
+public class OrderApplicationInternalDomainEventsListener {
 
     private final OrderCreatedMessagePublisher orderCreatedMessagePublisher;
     private final OrderCancelledMessagePublisher orderCancelledMessagePublisher;

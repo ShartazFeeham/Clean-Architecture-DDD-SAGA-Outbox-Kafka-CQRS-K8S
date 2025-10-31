@@ -36,10 +36,11 @@ public class PaymentValidationEventConsumer {
         try {
             JsonNode root = objectMapper.readTree(record.value());
             JsonNode paymentNode = root.path("payment");
+            String paymentIdStr = paymentNode.path("paymentId").path("value").asText(null);
             String orderIdStr = paymentNode.path("orderId").path("value").asText(null);
-            String amount = paymentNode.path("price").path("amount").asText(null);
+            String amount = paymentNode.path("price").path("amount").asText(paymentIdStr);
 
-            paymentResponseMessageListener.paymentValidation(orderIdStr, amount);
+            paymentResponseMessageListener.paymentValidation(orderIdStr, amount, paymentIdStr);
         } catch (Exception e) {
             log.error("Error processing payment validation message; will be retried or sent to DLQ", e);
             throw new RuntimeException(e);

@@ -48,7 +48,8 @@ kafka:
   # TOPICS
   topic-names:
     payment-initialized: payments-initialized
-    payment-cancel: payments-cancel
+    payment-verified: payments-verified
+    payment-processing: payments-processing
     payment-complete: payments-complete
     payment-failed: payments-failed
-    payment-processing: payments-processing
+    payment-cancel: payments-cancel

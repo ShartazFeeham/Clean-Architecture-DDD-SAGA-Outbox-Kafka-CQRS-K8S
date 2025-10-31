@@ -3,7 +3,7 @@ package cadsok.payment.domain.application.services.events;
 import cadsok.payment.domain.application.models.PaymentCancelRequestDto;
 import cadsok.payment.domain.application.ports.input.event.PaymentCancelEventListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.ApplicationDomainEventPublisher;
+import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentCancelledEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
@@ -23,7 +23,7 @@ public class PaymentCancelEventListenerImpl implements PaymentCancelEventListene
 
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final ApplicationDomainEventPublisher applicationDomainEventPublisher;
+    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
 
     @Override
     @LogAction(value = "Handling payment cancel event.")
@@ -31,7 +31,7 @@ public class PaymentCancelEventListenerImpl implements PaymentCancelEventListene
         String paymentIdStr = paymentCancelRequestDto.paymentId();
         Payment payment = getPaymentIfExist(paymentIdStr);
         PaymentCancelledEvent event = paymentDomainService.cancel(payment);
-        applicationDomainEventPublisher.publish(event);
+        paymentApplicationInternalDomainEventPublisher.publish(event);
         paymentRepository.savePayment(payment);
     }
 

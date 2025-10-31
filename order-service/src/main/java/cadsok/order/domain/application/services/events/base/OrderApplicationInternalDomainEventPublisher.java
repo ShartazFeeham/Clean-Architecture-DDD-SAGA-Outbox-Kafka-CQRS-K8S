@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderServiceInternalDomainEventPublisher implements ApplicationEventPublisherAware, DomainEventPublisher<OrderEvent> {
+public class OrderApplicationInternalDomainEventPublisher implements ApplicationEventPublisherAware, DomainEventPublisher<OrderEvent> {
 
     private ApplicationEventPublisher applicationEventPublisher;
 
