@@ -18,7 +18,7 @@ public class ApplicationDomainEventPublisher implements ApplicationEventPublishe
     }
 
     @Override
-    @LogAction("Publishing order created event internally")
+    @LogAction("Publishing payment event internally")
     public void publish(PaymentEvent event) {
         this.applicationEventPublisher.publishEvent(event);
     }

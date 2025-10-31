@@ -15,6 +15,7 @@ import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -33,6 +34,7 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
     }
 
     @Override
+    @Transactional
     @LogAction("Initializing payment.")
     public PaymentTrackingResponseDto initializePayment(PaymentCreateRequestDto paymentCreateRequestDto) {
         Payment payment = PaymentMapper.toPayment(paymentCreateRequestDto);
