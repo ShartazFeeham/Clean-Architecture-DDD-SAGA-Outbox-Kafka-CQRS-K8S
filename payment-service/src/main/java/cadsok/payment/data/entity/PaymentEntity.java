@@ -2,29 +2,25 @@ package cadsok.payment.data.entity;
 
 import commonmodule.domain.entity.BaseEntity;
 import commonmodule.domain.values.PaymentStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "payments")
 public class PaymentEntity extends BaseEntity<UUID> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private final UUID paymentId;
+    private UUID paymentId;
 
-    private final UUID orderId;
-    private final UUID customerId;
-    private final String price;
+    private UUID orderId;
+    private UUID customerId;
+    private String price;
     private PaymentStatus paymentStatus;
 }

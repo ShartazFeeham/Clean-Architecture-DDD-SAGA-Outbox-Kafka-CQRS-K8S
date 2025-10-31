@@ -1,4 +1,4 @@
-package cadsok.order.domain.application.services;
+package cadsok.order.domain.application.services.events;
 
 import commonmodule.domain.events.publisher.DomainEventPublisher;
 import commonmodule.infra.logging.LogAction;

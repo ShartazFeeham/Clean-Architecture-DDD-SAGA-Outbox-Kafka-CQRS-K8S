@@ -13,7 +13,7 @@ public abstract class PaymentEventProducer<T extends PaymentEvent> extends Kafka
     }
 
     @Override
-    @LogAction("Publishing order event to Kafka")
+    @LogAction("Publishing payment event to Kafka")
     public void publish(T event) {
         // Setting a totally random key for better distribution across partitions as we don't need to place this
         // event in order with other events of the same order in same partition

@@ -1,14 +1,14 @@
 server:
-  port: 30
+  port: 20
 spring:
   application:
     name: restaurant-service
 
   # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/storage-service-pg-db
-    username: storage-service-pg-db_user
-    password: storage-service-pg-db_password
+    url: jdbc:postgresql://localhost:5433/payment-service-pg-db
+    username: payment-service-pg-db_user
+    password: payment-service-pg-db_password
 
   # JPA configuration
   jpa:
@@ -17,35 +17,38 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   sql:
     init:
       mode: always
 
-local:
-  kafka-topic-name: order-events
-  kafka:
-    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
-    producer:
-      key.serializer: org.apache.kafka.common.serialization.StringSerializer
-      value.serializer: org.apache.kafka.common.serialization.StringSerializer
-      # Safety configs (Kafka <= 2.8.0)
-      enable.idempotence: true
-      acks: all
-      retries: 3
-      retry.backoff.ms: 1000
-      # High throughput (better performance) config
-      linger.ms: 20 # After what period of time the producer will send the message
-      batch.size: 32768 # 32KB If the batch limit is met, send immediately
-      compression.type: snappy
-
-    consumer:
-      group.id: my-group
-      key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    admin:
-      enabled: true
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+kafka:
+  # GENERAL CONFIG
+  bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+  admin:
+    enabled: true
+  # PRODUCER CONFIG
+  producer:
+    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.StringSerializer
+    # Safety configs (Kafka <= 2.8.0)
+    enable.idempotence: true
+    acks: all
+    retries: 3
+    retry.backoff.ms: 1000
+    # High throughput (better performance) config
+    linger.ms: 20 # After what period of time the producer will send the message
+    batch.size: 32768 # 32KB If the batch limit is met, send immediately
+    compression.type: snappy
+  # CONSUMER CONFIG
+  consumer:
+    group.id: my-group
+    key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  # TOPICS
+  topic-names:
+    payment-initialized: payments-initialized
+    payment-cancel: payments-cancel
+    payment-complete: payments-complete
+    payment-failed: payments-failed
+    payment-processing: payments-processing

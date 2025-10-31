@@ -6,7 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 public class PaymentCancelKafkaProducer extends PaymentEventProducer<PaymentCancelledEvent> {
 
-    @Value("${local.kafka-topic-names.payment-cancel}")
+    @Value("${kafka.topic-names.payment-cancel}")
     private String topicName;
 
     public PaymentCancelKafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {

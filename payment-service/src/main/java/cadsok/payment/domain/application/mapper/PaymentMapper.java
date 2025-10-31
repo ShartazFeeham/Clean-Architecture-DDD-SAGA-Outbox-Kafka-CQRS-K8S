@@ -13,9 +13,9 @@ import java.util.UUID;
 public class PaymentMapper {
 
     public static Payment toPayment(PaymentCreateRequestDto request) {
-        return new Payment(new OrderId(UUID.fromString(request.orderId())),
+        return new Payment(null, new OrderId(UUID.fromString(request.orderId())),
                 new CustomerId(UUID.fromString(request.customerId())),
-                new Money(new BigDecimal(request.price())));
+                new Money(new BigDecimal(request.amount())), null);
     }
 
     public static PaymentTrackingResponseDto toResponse(Payment payment) {

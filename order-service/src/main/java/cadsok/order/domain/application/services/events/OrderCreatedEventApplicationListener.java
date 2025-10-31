@@ -1,4 +1,4 @@
-package cadsok.order.domain.application.services;
+package cadsok.order.domain.application.services.events;
 
 import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCreatedPaymentRequestMessagePublisher;
 import cadsok.order.domain.core.event.OrderCreatedEvent;

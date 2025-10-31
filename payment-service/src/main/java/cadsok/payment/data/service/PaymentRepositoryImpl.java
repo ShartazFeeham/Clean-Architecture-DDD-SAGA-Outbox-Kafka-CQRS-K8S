@@ -6,9 +6,12 @@ import cadsok.payment.data.repository.PaymentJpaRepository;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.values.PaymentId;
+import commonmodule.domain.values.OrderId;
+import commonmodule.domain.values.PaymentStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,5 +31,16 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         PaymentEntity paymentEntity = PaymentDbMapper.toEntity(payment);
         PaymentEntity result = paymentJpaRepository.save(paymentEntity);
         return PaymentDbMapper.toPayment(result);
+    }
+
+    @Override
+    public boolean isPaymentExistForOrder(OrderId orderId) {
+        int existingActivePayments = paymentJpaRepository.findByOrderId(orderId.getValue())
+                .stream()
+                .filter(payment -> payment.getPaymentStatus() != PaymentStatus.FAILED
+                        && PaymentStatus.CANCELLED != payment.getPaymentStatus())
+                .toList()
+                .size();
+        return existingActivePayments > 0;
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 public class PaymentFailedKafkaProducer extends PaymentEventProducer<PaymentFailedEvent> {
 
-    @Value("${local.kafka-topic-names.payment-failed}")
+    @Value("${kafka.topic-names.payment-failed}")
     private String topicName;
 
     public PaymentFailedKafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {

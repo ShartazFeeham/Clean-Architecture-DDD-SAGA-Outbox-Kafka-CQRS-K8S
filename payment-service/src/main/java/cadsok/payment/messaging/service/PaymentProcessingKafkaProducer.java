@@ -6,7 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 public class PaymentProcessingKafkaProducer extends PaymentEventProducer<PaymentProcessingEvent> {
 
-    @Value("${local.kafka-topic-names.payment-processing}")
+    @Value("${kafka.topic-names.payment-processing}")
     private String topicName;
 
     public PaymentProcessingKafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {

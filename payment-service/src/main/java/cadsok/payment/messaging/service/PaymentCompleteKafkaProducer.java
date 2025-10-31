@@ -6,7 +6,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 public class PaymentCompleteKafkaProducer extends PaymentEventProducer<PaymentCompleteEvent> {
 
-    @Value("${local.kafka-topic-names.payment-complete}")
+    @Value("${kafka.topic-names.payment-complete}")
     private String topicName;
 
     public PaymentCompleteKafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {

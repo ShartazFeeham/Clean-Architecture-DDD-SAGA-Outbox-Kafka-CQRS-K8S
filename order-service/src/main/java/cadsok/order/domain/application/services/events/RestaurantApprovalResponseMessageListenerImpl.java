@@ -1,4 +1,4 @@
-package cadsok.order.domain.application.services;
+package cadsok.order.domain.application.services.events;
 
 import cadsok.order.domain.application.models.message.RestaurantApprovalResponse;
 import cadsok.order.domain.application.ports.input.message.listener.restaurant.approval.RestaurantApprovalResponseMessageListener;

@@ -15,10 +15,12 @@ public class Payment extends AggregateRoot<OrderId> {
     private final Money price;
     private PaymentStatus paymentStatus;
 
-    public Payment(OrderId orderId, CustomerId customerId, Money price) {
+    public Payment(PaymentId paymentId, OrderId orderId, CustomerId customerId, Money price, PaymentStatus paymentStatus) {
+        this.paymentId = paymentId;
         this.orderId = orderId;
         this.customerId = customerId;
         this.price = price;
+        this.paymentStatus = paymentStatus;
     }
 
     public PaymentId getPaymentId() {
