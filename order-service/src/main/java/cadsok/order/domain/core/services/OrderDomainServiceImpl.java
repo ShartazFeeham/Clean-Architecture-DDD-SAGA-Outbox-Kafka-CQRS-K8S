@@ -1,14 +1,14 @@
 package cadsok.order.domain.core.services;
 
-import cadsok.order.domain.core.event.OrderPaymentValidEvent;
-import commonmodule.domain.values.DateTimeUtil;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Product;
 import cadsok.order.domain.core.entity.Restaurant;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
-import cadsok.order.domain.core.event.OrderPaidEvent;
+import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import cadsok.order.domain.core.exception.OrderDomainException;
+import commonmodule.domain.values.DateTimeUtil;
+import commonmodule.domain.values.Money;
 
 import java.util.List;
 
@@ -27,22 +27,22 @@ public class OrderDomainServiceImpl implements OrderDomainService {
         order.getItems().forEach(orderItem -> {
             Product currentProduct = orderItem.getProduct();
             boolean productFound = false;
-            
+
             for (Product restaurantProduct : restaurant.getProducts()) {
                 if (currentProduct.equals(restaurantProduct)) {
                     currentProduct.updateWithConfirmedNameAndPrice(
-                        restaurantProduct.getName(), 
-                        restaurantProduct.getPrice()
+                            restaurantProduct.getName(),
+                            restaurantProduct.getPrice()
                     );
                     productFound = true;
                     break;
                 }
             }
-            
+
             if (!productFound) {
                 throw new OrderDomainException(
-                    "Product with id " + currentProduct.getId().getValue() + 
-                    " is not available in restaurant with id " + restaurant.getId().getValue()
+                        "Product with id " + currentProduct.getId().getValue() +
+                                " is not available in restaurant with id " + restaurant.getId().getValue()
                 );
             }
         });
@@ -55,9 +55,12 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderPaymentValidEvent validateAndPayOrder(Order order) {
-        order.pay();
-        return new OrderPaymentValidEvent(order, DateTimeUtil.now());
+    public OrderPaymentValidEvent validateAndPayOrder(Order order, Money amount) {
+        if (amount.isGreaterThanZero() && amount.getAmount().equals(order.getPrice().getAmount())) {
+            order.pay();
+            return new OrderPaymentValidEvent(order, DateTimeUtil.now(), true);
+        }
+        return new OrderPaymentValidEvent(order, DateTimeUtil.now(), false);
     }
 
     @Override

@@ -9,6 +9,7 @@ import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import cadsok.order.domain.core.exception.OrderNotFoundException;
 import cadsok.order.domain.core.services.OrderDomainService;
 import cadsok.order.domain.core.values.TrackingId;
+import commonmodule.domain.values.Money;
 import commonmodule.domain.values.OrderStatus;
 import commonmodule.infra.logging.Auditable;
 import commonmodule.infra.logging.LogAction;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Validated
@@ -39,8 +41,8 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
     public void paymentValidation(String orderId, String price) {
         Order order = getOrder(orderId);
         orderRepository.updateStatus(order.getId(), OrderStatus.PAID);
-        OrderPaymentValidEvent orderPaidEvent = orderDomainService.validateAndPayOrder(order);
-        orderServiceInternalDomainEventPublisher.publish(orderPaidEvent);
+        OrderPaymentValidEvent orderValidatedEvent = orderDomainService.validateAndPayOrder(order, new Money(new BigDecimal(price)));
+        orderServiceInternalDomainEventPublisher.publish(orderValidatedEvent);
     }
 
     @Override

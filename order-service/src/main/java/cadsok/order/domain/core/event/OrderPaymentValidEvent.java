@@ -5,8 +5,13 @@ import cadsok.order.domain.core.entity.Order;
 import java.time.ZonedDateTime;
 
 public class OrderPaymentValidEvent extends OrderEvent {
-    public OrderPaymentValidEvent(Order order, ZonedDateTime createdAt) {
+    private final boolean isValid;
+    public OrderPaymentValidEvent(Order order, ZonedDateTime createdAt, boolean isValid) {
         super(order, createdAt);
+        this.isValid = isValid;
+    }
+
+    public boolean isValid() {
+        return isValid;
     }
 }
-
