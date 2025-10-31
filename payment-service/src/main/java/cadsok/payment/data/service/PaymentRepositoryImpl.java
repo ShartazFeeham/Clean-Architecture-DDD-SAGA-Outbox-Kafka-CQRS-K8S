@@ -6,18 +6,16 @@ import cadsok.payment.data.repository.PaymentJpaRepository;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.values.PaymentId;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     private final PaymentJpaRepository paymentJpaRepository;
-
-    public PaymentRepositoryImpl(PaymentJpaRepository paymentJpaRepository) {
-        this.paymentJpaRepository = paymentJpaRepository;
-    }
 
     @Override
     public Optional<Payment> getPaymentById(PaymentId paymentId) {
