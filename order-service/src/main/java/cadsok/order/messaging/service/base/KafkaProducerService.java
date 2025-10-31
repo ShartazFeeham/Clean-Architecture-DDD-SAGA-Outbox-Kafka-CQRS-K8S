@@ -1,4 +1,4 @@
-package cadsok.order.messaging.service;
+package cadsok.order.messaging.service.base;
 
 import cadsok.order.messaging.exception.OrderEventException;
 import com.fasterxml.jackson.core.JsonProcessingException;

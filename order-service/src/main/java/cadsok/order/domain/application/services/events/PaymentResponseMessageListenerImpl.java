@@ -2,8 +2,8 @@ package cadsok.order.domain.application.services.events;
 
 import cadsok.order.domain.application.models.message.PaymentResponse;
 import cadsok.order.domain.application.ports.input.message.listener.payment.PaymentResponseMessageListener;
-import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderPaymentValidatedMessagePublisher;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
+import cadsok.order.domain.application.services.events.base.OrderServiceInternalDomainEventPublisher;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import cadsok.order.domain.core.exception.OrderNotFoundException;
@@ -24,14 +24,12 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
 
     private final OrderRepository orderRepository;
     private final OrderDomainService orderDomainService;
-    private final OrderPaymentValidatedMessagePublisher orderPaymentValidatedMessagePublisher;
+    private final OrderServiceInternalDomainEventPublisher orderServiceInternalDomainEventPublisher;
 
-    public PaymentResponseMessageListenerImpl(OrderRepository orderRepository,
-                                              OrderDomainService orderDomainService,
-                                              OrderPaymentValidatedMessagePublisher orderPaymentValidatedMessagePublisher) {
+    public PaymentResponseMessageListenerImpl(OrderRepository orderRepository, OrderDomainService orderDomainService, OrderServiceInternalDomainEventPublisher orderServiceInternalDomainEventPublisher) {
         this.orderRepository = orderRepository;
         this.orderDomainService = orderDomainService;
-        this.orderPaymentValidatedMessagePublisher = orderPaymentValidatedMessagePublisher;
+        this.orderServiceInternalDomainEventPublisher = orderServiceInternalDomainEventPublisher;
     }
 
     @Override
@@ -42,7 +40,7 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
         Order order = getOrder(orderId);
         orderRepository.updateStatus(order.getId(), OrderStatus.PAID);
         OrderPaymentValidEvent orderPaidEvent = orderDomainService.validateAndPayOrder(order);
-        orderPaymentValidatedMessagePublisher.publish(orderPaidEvent);
+        orderServiceInternalDomainEventPublisher.publish(orderPaidEvent);
     }
 
     @Override

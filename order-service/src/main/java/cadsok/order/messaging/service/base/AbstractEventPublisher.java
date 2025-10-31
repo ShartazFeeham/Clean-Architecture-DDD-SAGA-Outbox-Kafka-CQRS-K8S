@@ -1,4 +1,4 @@
-package cadsok.order.messaging.service;
+package cadsok.order.messaging.service.base;
 
 import cadsok.order.domain.core.event.OrderEvent;
 import commonmodule.infra.logging.LogAction;

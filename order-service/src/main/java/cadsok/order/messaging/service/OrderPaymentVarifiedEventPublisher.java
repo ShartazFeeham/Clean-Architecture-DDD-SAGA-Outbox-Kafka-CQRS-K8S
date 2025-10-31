@@ -1,6 +1,7 @@
 package cadsok.order.messaging.service;
 
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
+import cadsok.order.messaging.service.base.AbstractEventPublisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 

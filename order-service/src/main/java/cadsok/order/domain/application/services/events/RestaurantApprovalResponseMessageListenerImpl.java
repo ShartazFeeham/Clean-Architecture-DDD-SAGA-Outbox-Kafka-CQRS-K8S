@@ -2,7 +2,7 @@ package cadsok.order.domain.application.services.events;
 
 import cadsok.order.domain.application.models.message.RestaurantApprovalResponse;
 import cadsok.order.domain.application.ports.input.message.listener.restaurant.approval.RestaurantApprovalResponseMessageListener;
-import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCancelledPaymentRequestMessagePublisher;
+import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCancelledMessagePublisher;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
@@ -24,15 +24,15 @@ import java.util.UUID;
 public class RestaurantApprovalResponseMessageListenerImpl implements RestaurantApprovalResponseMessageListener {
 
     private final OrderRepository orderRepository;
-    private final OrderCancelledPaymentRequestMessagePublisher orderCancelledPaymentRequestMessagePublisher;
+    private final OrderCancelledMessagePublisher orderCancelledMessagePublisher;
     private final OrderDomainService orderDomainService;
 
     public RestaurantApprovalResponseMessageListenerImpl
             (OrderRepository orderRepository,
-             OrderCancelledPaymentRequestMessagePublisher orderCancelledPaymentRequestMessagePublisher,
+             OrderCancelledMessagePublisher orderCancelledMessagePublisher,
              OrderDomainService orderDomainService) {
         this.orderRepository = orderRepository;
-        this.orderCancelledPaymentRequestMessagePublisher = orderCancelledPaymentRequestMessagePublisher;
+        this.orderCancelledMessagePublisher = orderCancelledMessagePublisher;
         this.orderDomainService = orderDomainService;
     }
 
@@ -53,7 +53,7 @@ public class RestaurantApprovalResponseMessageListenerImpl implements Restaurant
         OrderCancelledEvent orderCancelledEvent = orderDomainService
                 .cancelOrderPayment(order, restaurantApprovalResponse.getFailureMessages());
         orderRepository.save(order);
-        orderCancelledPaymentRequestMessagePublisher.publish(orderCancelledEvent);
+        orderCancelledMessagePublisher.publish(orderCancelledEvent);
     }
 
     private Order getOrder(RestaurantApprovalResponse restaurantApprovalResponse) {

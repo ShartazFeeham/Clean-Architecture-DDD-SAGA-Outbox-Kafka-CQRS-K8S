@@ -1,16 +1,16 @@
 package cadsok.order.messaging.service;
 
-import cadsok.order.domain.core.event.OrderCreatedEvent;
+import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.messaging.service.base.AbstractEventPublisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 
-public class OrderCreatedEventPublisher extends AbstractEventPublisher<OrderCreatedEvent> {
+public class OrderCancelledEventPublisher extends AbstractEventPublisher<OrderCancelledEvent> {
 
-    @Value("${kafka.topic-names.order-created}")
+    @Value("${kafka.topic-names.order-cancelled}")
     private String topicName;
 
-    public OrderCreatedEventPublisher(KafkaTemplate<String, String> kafkaTemplate) {
+    public OrderCancelledEventPublisher(KafkaTemplate<String, String> kafkaTemplate) {
         super(kafkaTemplate);
     }
 

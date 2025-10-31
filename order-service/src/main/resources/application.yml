@@ -54,7 +54,8 @@ kafka:
   dlq-suffix: "-DLQ"
   # TOPICS
   topic-names:
-    order-events: order-events
+    order-created: order-created
+    order-cancelled: order-cancelled
     payment-initialized: payments-initialized
     payment-processing: payments-processing
     payment-failed: payments-failed
