@@ -5,6 +5,7 @@ import cadsok.order.domain.core.entity.Restaurant;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
 import cadsok.order.domain.core.event.OrderPaidEvent;
+import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface OrderDomainService {
 
     OrderCreatedEvent validateAndInitiateOrder(Order order, Restaurant restaurant);
 
-    OrderPaidEvent payOrder(Order order);
+    OrderPaymentValidEvent validateAndPayOrder(Order order);
 
     void approveOrder(Order order);
 

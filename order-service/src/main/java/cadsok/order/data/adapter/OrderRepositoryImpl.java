@@ -2,6 +2,7 @@ package cadsok.order.data.adapter;
 
 import cadsok.order.data.entities.StreetAddressEntity;
 import cadsok.order.data.mapper.DeliveryAddressMapper;
+import cadsok.order.data.mapper.OrderStatusMapper;
 import cadsok.order.data.repositories.StreetAddressJpaRepository;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.data.entities.OrderEntity;
@@ -10,6 +11,7 @@ import cadsok.order.data.repositories.OrderJpaRepository;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.values.TrackingId;
 import commonmodule.domain.values.OrderId;
+import commonmodule.domain.values.OrderStatus;
 import commonmodule.infra.logging.LogAction;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +36,16 @@ public class OrderRepositoryImpl implements OrderRepository {
         OrderEntity orderEntity = OrderMapper.toOrderEntity(order, savedAddress);
         orderJpaRepository.save(orderEntity);
         return OrderMapper.toOrder(orderEntity);
+    }
+
+    @Override
+    public Optional<Order> updateStatus(OrderId orderId, OrderStatus orderStatus) {
+        Optional<OrderEntity> orderEntityOp = orderJpaRepository.findById(orderId.getValue());
+        orderEntityOp.ifPresent(orderEntity ->{
+            orderEntity.setOrderStatus(OrderStatusMapper.toDbStatus(orderStatus));
+            orderJpaRepository.save(orderEntity);
+        });
+        return orderEntityOp.map(OrderMapper::toOrder);
     }
 
     @Override

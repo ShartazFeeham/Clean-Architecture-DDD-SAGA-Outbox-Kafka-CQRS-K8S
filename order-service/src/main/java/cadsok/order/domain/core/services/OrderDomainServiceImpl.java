@@ -1,5 +1,6 @@
 package cadsok.order.domain.core.services;
 
+import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import commonmodule.domain.values.DateTimeUtil;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Product;
@@ -54,9 +55,9 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderPaidEvent payOrder(Order order) {
+    public OrderPaymentValidEvent validateAndPayOrder(Order order) {
         order.pay();
-        return new OrderPaidEvent(order, DateTimeUtil.now());
+        return new OrderPaymentValidEvent(order, DateTimeUtil.now());
     }
 
     @Override

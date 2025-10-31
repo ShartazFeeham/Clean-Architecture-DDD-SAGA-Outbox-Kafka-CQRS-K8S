@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class OrderEventProducerService<T extends OrderEvent> extends KafkaProducerService<T> {
 
-    @Value("${local.kafka-topic-name}")
+    @Value("${kafka.topic-names.order-events}")
     private String topicName;
 
     public OrderEventProducerService(KafkaTemplate<String, String> kafkaTemplate) {

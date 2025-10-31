@@ -4,7 +4,7 @@ import cadsok.order.domain.application.models.message.PaymentResponse;
 
 public interface PaymentResponseMessageListener {
 
-    void paymentCompleted(PaymentResponse paymentResponse);
+    void paymentValidation(String orderId, String price);
 
     void paymentCancelled(PaymentResponse paymentResponse);
 

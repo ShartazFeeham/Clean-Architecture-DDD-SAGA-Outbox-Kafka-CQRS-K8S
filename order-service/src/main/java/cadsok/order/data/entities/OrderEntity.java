@@ -2,17 +2,12 @@ package cadsok.order.data.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @Getter
-@Service
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -32,6 +27,7 @@ public class OrderEntity extends BaseEntity {
     @Column(updatable = false, nullable = false)
     private String price;
     @Column(nullable = false)
+    @Setter
     private Integer orderStatus;
     @OneToOne
     @NotNull
