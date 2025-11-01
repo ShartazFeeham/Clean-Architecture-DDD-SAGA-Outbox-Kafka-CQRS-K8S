@@ -14,6 +14,7 @@ import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +28,7 @@ public class PaymentGatewayMessageListenerImpl implements PaymentGatewayMessageL
     private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
 
     @Override
+    @Transactional
     @LogAction(value = "Handling payment-gateway response event.")
     public void handlePaymentGatewayResponse(PaymentGatewayRequestDto paymentCancelRequestDto) {
         String paymentIdStr = paymentCancelRequestDto.paymentId();
