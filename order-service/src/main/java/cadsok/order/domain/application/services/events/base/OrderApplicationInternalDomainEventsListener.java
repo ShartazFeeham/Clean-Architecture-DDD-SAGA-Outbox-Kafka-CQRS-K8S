@@ -5,7 +5,9 @@ import cadsok.order.domain.application.ports.output.message.publisher.payment.Or
 import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderPaymentValidatedMessagePublisher;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
+import cadsok.order.domain.core.event.OrderPaidEvent;
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
+import cadsok.order.messaging.service.OrderPaidEventPublisher;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ public class OrderApplicationInternalDomainEventsListener {
     private final OrderCreatedMessagePublisher orderCreatedMessagePublisher;
     private final OrderCancelledMessagePublisher orderCancelledMessagePublisher;
     private final OrderPaymentValidatedMessagePublisher orderPaymentValidatedMessagePublisher;
+    private final OrderPaidEventPublisher orderPaidEventPublisher;
 
     @TransactionalEventListener
     @LogAction("Sending order created event to message broker")
@@ -35,5 +38,11 @@ public class OrderApplicationInternalDomainEventsListener {
     @LogAction("Sending order cancelled event to message broker")
     void process(OrderPaymentValidEvent event) {
         orderPaymentValidatedMessagePublisher.publish(event);
+    }
+
+    @TransactionalEventListener
+    @LogAction("Sending order paid event to message broker")
+    void process(OrderPaidEvent event) {
+        orderPaidEventPublisher.publish(event);
     }
 }

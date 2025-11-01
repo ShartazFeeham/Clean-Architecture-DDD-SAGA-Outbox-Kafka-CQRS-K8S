@@ -56,10 +56,12 @@ kafka:
   topic-names:
     order-created: order-created
     order-cancelled: order-cancelled
+    order-paid: order-paid
     payment-initialized: payments-initialized
     payment-processing: payments-processing
     payment-failed: payments-failed
     payment-verified: payments-verified
+    payment-complete: payments-complete
 
 logging:
   level:

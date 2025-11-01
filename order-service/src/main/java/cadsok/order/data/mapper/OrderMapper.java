@@ -21,7 +21,7 @@ public class OrderMapper {
     private static final Logger log = LoggerFactory.getLogger(OrderMapper.class);
     
     public static OrderEntity toOrderEntity(Order order, StreetAddressEntity streetAddressEntity) {
-        return OrderEntity.builder()
+        OrderEntity orderEntity = OrderEntity.builder()
                 .customerId(order.getCustomerId().getValue())
                 .restaurantId(order.getRestaurantId().getValue())
                 .trackingId(order.getTrackingId().getValue())
@@ -35,9 +35,14 @@ public class OrderMapper {
 //                                .build()
                         streetAddressEntity
                 )
-                .items(order.getItems().stream().map(OrderItemMapper::toOrderItemEntity).toList())
                 .failureMessages(getFailureMessagesAsString(order.getFailureMessages()))
                 .build();
+
+        order.getItems().stream()
+                .map(OrderItemMapper::toOrderItemEntity)
+                .forEach(orderEntity::addItem);
+
+        return orderEntity;
     }
 
     private static String getFailureMessagesAsString(List<String> failureMessages) {

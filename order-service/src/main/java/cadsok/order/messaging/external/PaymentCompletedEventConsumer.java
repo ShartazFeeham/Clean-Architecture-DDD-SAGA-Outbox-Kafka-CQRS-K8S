@@ -10,30 +10,28 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PaymentValidationEventConsumer {
+public class PaymentCompletedEventConsumer {
 
-    private final Logger log = LoggerFactory.getLogger(PaymentValidationEventConsumer.class);
+    private final Logger log = LoggerFactory.getLogger(PaymentCompletedEventConsumer.class);
     private final ObjectMapper objectMapper;
     private final PaymentResponseMessageListener paymentResponseMessageListener;
 
-    public PaymentValidationEventConsumer(ObjectMapper objectMapper,
-                                          PaymentResponseMessageListener paymentResponseMessageListener) {
+    public PaymentCompletedEventConsumer(ObjectMapper objectMapper,
+                                         PaymentResponseMessageListener paymentResponseMessageListener) {
         this.objectMapper = objectMapper;
         this.paymentResponseMessageListener = paymentResponseMessageListener;
     }
 
-    @KafkaListener(topics = "${kafka.topic-names.payment-initialized}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.payment-complete}", groupId = "${kafka.consumer.group.id}")
     public void consumeMessage(ConsumerRecord<String, String> record) {
         log.info("Consumed message: Key: {}, Topic: {}, Partition: {}, Offset: {}",
                 record.key(), record.topic(), record.partition(), record.offset());
         try {
             JsonNode root = objectMapper.readTree(record.value());
             JsonNode paymentNode = root.path("payment");
-            String paymentIdStr = paymentNode.path("paymentId").path("value").asText(null);
             String orderIdStr = paymentNode.path("orderId").path("value").asText(null);
-            String amount = paymentNode.path("price").path("amount").asText(paymentIdStr);
 
-            paymentResponseMessageListener.paymentValidation(orderIdStr, amount, paymentIdStr);
+            paymentResponseMessageListener.paymentCompleted(orderIdStr);
         } catch (Exception e) {
             log.error("Error processing payment validation message; will be retried or sent to DLQ", e);
             throw new RuntimeException(e);

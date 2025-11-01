@@ -5,6 +5,7 @@ import cadsok.order.domain.application.ports.input.message.listener.payment.Paym
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.domain.application.services.events.base.OrderApplicationInternalDomainEventPublisher;
 import cadsok.order.domain.core.entity.Order;
+import cadsok.order.domain.core.event.OrderPaidEvent;
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import cadsok.order.domain.core.exception.OrderNotFoundException;
 import cadsok.order.domain.core.services.OrderDomainService;
@@ -40,8 +41,7 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
     @Transactional
     public void paymentValidation(String orderId, String price, String paymentId) {
         Order order = getOrder(orderId);
-        orderRepository.updateStatus(order.getId(), OrderStatus.PAID);
-        OrderPaymentValidEvent orderValidatedEvent = orderDomainService.validateAndPayOrder(order, new Money(new BigDecimal(price)), paymentId);
+        OrderPaymentValidEvent orderValidatedEvent = orderDomainService.validatePayment(order, new Money(new BigDecimal(price)), paymentId);
         orderApplicationInternalDomainEventPublisher.publish(orderValidatedEvent);
     }
 
@@ -49,6 +49,15 @@ public class PaymentResponseMessageListenerImpl implements PaymentResponseMessag
     @LogAction(value = "Processing payment cancellation", identifiers = {"orderId"})
     public void paymentCancelled(PaymentResponse paymentResponse) {
         // TODO: Implement if needed
+    }
+
+    @Override
+    @Transactional
+    public void paymentCompleted(String orderId) {
+        Order order = getOrder(orderId);
+        orderRepository.updateStatus(order.getId(), OrderStatus.PAID);
+        OrderPaidEvent event = orderDomainService.payOrder(order);
+        orderApplicationInternalDomainEventPublisher.publish(event);
     }
 
     @Transactional(readOnly = true)

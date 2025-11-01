@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +36,14 @@ public class OrderEntity extends BaseEntity {
 
     // Order details: items
     @NotNull
-    @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<OrderItemEntity> items;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<OrderItemEntity> items = new ArrayList<>();
+
     private String failureMessages;
+
+    public void addItem(OrderItemEntity item) {
+        this.items.add(item);
+        item.setOrder(this);
+    }
 }

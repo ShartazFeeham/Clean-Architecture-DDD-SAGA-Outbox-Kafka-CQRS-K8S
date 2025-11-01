@@ -39,13 +39,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> updateStatus(OrderId orderId, OrderStatus orderStatus) {
+    public void updateStatus(OrderId orderId, OrderStatus orderStatus) {
         Optional<OrderEntity> orderEntityOp = orderJpaRepository.findById(orderId.getValue());
         orderEntityOp.ifPresent(orderEntity ->{
             orderEntity.setOrderStatus(OrderStatusMapper.toDbStatus(orderStatus));
             orderJpaRepository.save(orderEntity);
         });
-        return orderEntityOp.map(OrderMapper::toOrder);
+        orderEntityOp.map(OrderMapper::toOrder);
     }
 
     @Override

@@ -8,4 +8,6 @@ public interface PaymentResponseMessageListener {
 
     void paymentCancelled(PaymentResponse paymentResponse);
 
+    void paymentCompleted(String orderId);
+
 }

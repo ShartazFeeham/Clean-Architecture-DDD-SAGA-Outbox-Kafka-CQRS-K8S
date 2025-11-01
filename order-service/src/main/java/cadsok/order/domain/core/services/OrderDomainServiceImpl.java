@@ -5,6 +5,7 @@ import cadsok.order.domain.core.entity.Product;
 import cadsok.order.domain.core.entity.Restaurant;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
+import cadsok.order.domain.core.event.OrderPaidEvent;
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import cadsok.order.domain.core.exception.OrderDomainException;
 import commonmodule.domain.values.DateTimeUtil;
@@ -55,12 +56,17 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderPaymentValidEvent validateAndPayOrder(Order order, Money amount, String paymentId) {
+    public OrderPaymentValidEvent validatePayment(Order order, Money amount, String paymentId) {
         if (amount.isGreaterThanZero() && amount.getAmount().equals(order.getPrice().getAmount())) {
-            order.pay();
             return new OrderPaymentValidEvent(order, DateTimeUtil.now(), true, paymentId);
         }
         return new OrderPaymentValidEvent(order, DateTimeUtil.now(), false, paymentId);
+    }
+
+    @Override
+    public OrderPaidEvent payOrder(Order order) {
+        order.pay();
+        return new OrderPaidEvent(order, DateTimeUtil.now());
     }
 
     @Override

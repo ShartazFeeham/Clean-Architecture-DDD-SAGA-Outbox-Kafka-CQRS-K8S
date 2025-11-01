@@ -4,6 +4,7 @@ import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Restaurant;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
+import cadsok.order.domain.core.event.OrderPaidEvent;
 import cadsok.order.domain.core.event.OrderPaymentValidEvent;
 import commonmodule.domain.values.Money;
 
@@ -13,7 +14,9 @@ public interface OrderDomainService {
 
     OrderCreatedEvent validateAndInitiateOrder(Order order, Restaurant restaurant);
 
-    OrderPaymentValidEvent validateAndPayOrder(Order order, Money amount, String paymentId);
+    OrderPaymentValidEvent validatePayment(Order order, Money amount, String paymentId);
+
+    OrderPaidEvent payOrder(Order order);
 
     void approveOrder(Order order);
 

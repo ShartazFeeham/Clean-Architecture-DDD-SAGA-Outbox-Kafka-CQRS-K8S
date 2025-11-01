@@ -11,7 +11,7 @@ public interface OrderRepository {
 
     Order save(Order order);
 
-    Optional<Order> updateStatus(OrderId orderId, OrderStatus orderStatus);
+    void updateStatus(OrderId orderId, OrderStatus orderStatus);
 
     Optional<Order> findById(OrderId orderId);
 
