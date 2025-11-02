@@ -13,9 +13,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: order-service-pg-db
-      POSTGRES_USER: order-service-pg-db_user
-      POSTGRES_PASSWORD: order-service-pg-db_password
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
     volumes:
       - order-service-pg-db_local_data:/var/lib/postgresql/data
 
@@ -30,11 +30,28 @@ services:
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_DB: payment-service-pg-db
-      POSTGRES_USER: payment-service-pg-db_user
-      POSTGRES_PASSWORD: payment-service-pg-db_password
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
     volumes:
       - payment-service-pg-db_local_data:/var/lib/postgresql/data
+
+  # Postgres database for restaurant-service
+  storage-restaurant-service-pg-db:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial-100m
+    image: postgres:14.15-alpine3.20
+    container_name: restaurant-service-pg-db
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - restaurant-service-pg-db_local_data:/var/lib/postgresql/data
 
   # PG Admin for postgres database UI
   storage-pg-admin-postgres-ui:
@@ -56,4 +73,5 @@ volumes:
     driver: local
   order-service-pg-db_local_data:
   payment-service-pg-db_local_data:
+  restaurant-service-pg-db_local_data:
   pgadmin-data:

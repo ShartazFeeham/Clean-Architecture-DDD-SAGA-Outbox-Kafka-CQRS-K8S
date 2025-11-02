@@ -1,0 +1,3 @@
+Order service has restaurant ID mentions.
+But for simplicity & to avoid complications in unnecessary business logic,
+WE'LL ONLY CONSIDER THERE IS ONLY ONE RESTAURANT FROM RESTAURANT SERVICE

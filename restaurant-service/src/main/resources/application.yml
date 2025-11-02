@@ -1,14 +1,14 @@
 server:
-  port: 20
+  port: 30
 spring:
   application:
     name: restaurant-service
 
   # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/storage-service-pg-db
-    username: storage-service-pg-db_user
-    password: storage-service-pg-db_password
+    url: jdbc:postgresql://localhost:5434/db
+    username: user
+    password: password
 
   # JPA configuration
   jpa:
@@ -17,35 +17,54 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   sql:
     init:
       mode: always
 
-local:
-  kafka-topic-name: order-events
-  kafka:
-    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
-    producer:
-      key.serializer: org.apache.kafka.common.serialization.StringSerializer
-      value.serializer: org.apache.kafka.common.serialization.StringSerializer
-      # Safety configs (Kafka <= 2.8.0)
-      enable.idempotence: true
-      acks: all
-      retries: 3
-      retry.backoff.ms: 1000
-      # High throughput (better performance) config
-      linger.ms: 20 # After what period of time the producer will send the message
-      batch.size: 32768 # 32KB If the batch limit is met, send immediately
-      compression.type: snappy
+kafka:
+  # GENERAL CONFIG
+  bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+  admin:
+    enabled: true
+  # PRODUCER CONFIG
+  producer:
+    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.StringSerializer
+    # Safety configs (Kafka <= 2.8.0)
+    enable.idempotence: true
+    acks: all
+    retries: 3
+    retry.backoff.ms: 1000
+    # High throughput (better performance) config
+    linger.ms: 20 # After what period of time the producer will send the message
+    batch.size: 32768 # 32KB If the batch limit is met, send immediately
+    compression.type: snappy
+  # CONSUMER CONFIG
+  consumer:
+    group.id: my-group
+    key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  # RETRY/DLQ CONFIG
+  retry-attempts: 3
+  retry-interval: 1000
+  retry-backoff-multiplier: 2
+  retry-backoff-max-interval: 60000
+  dlq-prefix: ""
+  dlq-suffix: "-DLQ"
+  # TOPICS
+  topic-names:
+    order-created: order-created
+    order-cancelled: order-cancelled
+    order-paid: order-paid
+    payment-initialized: payments-initialized
+    payment-processing: payments-processing
+    payment-failed: payments-failed
+    payment-verified: payments-verified
+    payment-complete: payments-complete
 
-    consumer:
-      group.id: my-group
-      key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    admin:
-      enabled: true
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    org.hibernate.orm.jdbc.bind: WARN

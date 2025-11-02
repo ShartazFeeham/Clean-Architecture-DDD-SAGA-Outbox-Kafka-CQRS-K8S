@@ -6,9 +6,9 @@ spring:
 
   # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/order-service-pg-db
-    username: order-service-pg-db_user
-    password: order-service-pg-db_password
+    url: jdbc:postgresql://localhost:5432/db
+    username: user
+    password: password
 
   # JPA configuration
   jpa:

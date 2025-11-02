@@ -6,9 +6,9 @@ spring:
 
   # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5433/payment-service-pg-db
-    username: payment-service-pg-db_user
-    password: payment-service-pg-db_password
+    url: jdbc:postgresql://localhost:5433/db
+    username: user
+    password: password
 
   # JPA configuration
   jpa:
