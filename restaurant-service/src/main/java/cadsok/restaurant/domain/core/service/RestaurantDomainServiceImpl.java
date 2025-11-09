@@ -5,10 +5,21 @@ import cadsok.restaurant.domain.core.event.RestaurantEvent;
 import cadsok.restaurant.domain.core.event.RestaurantRejectedEvent;
 import cadsok.restaurant.domain.core.exception.RestaurantDomainException;
 import commonmodule.domain.values.DateTimeUtil;
+import io.micrometer.common.util.StringUtils;
 
-public class OrderDomainServiceImpl implements OrderDomainService {
+import java.util.Objects;
+
+public class RestaurantDomainServiceImpl implements RestaurantDomainService {
+
     @Override
-    public RestaurantEvent handleNewOrder(String orderId, boolean accept) {
+    public void validateNewOrder(String orderId, String jsonData) {
+        if (Objects.isNull(orderId) || StringUtils.isBlank(jsonData)) {
+            throw new RestaurantDomainException("Order id can nt be null & order data can not be empty");
+        }
+    }
+
+    @Override
+    public RestaurantEvent handleRestaurantAction(String orderId, boolean accept) {
         if (orderId == null) {
             throw new RestaurantDomainException("Order cannot be null");
         }
@@ -18,4 +29,5 @@ public class OrderDomainServiceImpl implements OrderDomainService {
             return new RestaurantRejectedEvent(orderId,  DateTimeUtil.now());
         }
     }
+
 }

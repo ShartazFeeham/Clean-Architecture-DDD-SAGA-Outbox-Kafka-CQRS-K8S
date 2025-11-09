@@ -42,7 +42,7 @@ kafka:
     compression.type: snappy
   # CONSUMER CONFIG
   consumer:
-    group.id: my-group
+    group.id: restaurant-consumer-group
     key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
     value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
   # RETRY/DLQ CONFIG
@@ -54,14 +54,8 @@ kafka:
   dlq-suffix: "-DLQ"
   # TOPICS
   topic-names:
-    order-created: order-created
-    order-cancelled: order-cancelled
     order-paid: order-paid
-    payment-initialized: payments-initialized
-    payment-processing: payments-processing
-    payment-failed: payments-failed
-    payment-verified: payments-verified
-    payment-complete: payments-complete
+    restaurant-event: restaurant-event
 
 logging:
   level:
