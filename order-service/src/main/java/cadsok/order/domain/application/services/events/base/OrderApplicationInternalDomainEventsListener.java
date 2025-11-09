@@ -3,10 +3,8 @@ package cadsok.order.domain.application.services.events.base;
 import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCancelledMessagePublisher;
 import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCreatedMessagePublisher;
 import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderPaymentValidatedMessagePublisher;
-import cadsok.order.domain.core.event.OrderCancelledEvent;
-import cadsok.order.domain.core.event.OrderCreatedEvent;
-import cadsok.order.domain.core.event.OrderPaidEvent;
-import cadsok.order.domain.core.event.OrderPaymentValidEvent;
+import cadsok.order.domain.core.event.*;
+import cadsok.order.messaging.service.OrderCompletedEventPublisher;
 import cadsok.order.messaging.service.OrderPaidEventPublisher;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +19,7 @@ public class OrderApplicationInternalDomainEventsListener {
     private final OrderCancelledMessagePublisher orderCancelledMessagePublisher;
     private final OrderPaymentValidatedMessagePublisher orderPaymentValidatedMessagePublisher;
     private final OrderPaidEventPublisher orderPaidEventPublisher;
+    private final OrderCompletedEventPublisher orderCompletedEventPublisher;
 
     @TransactionalEventListener
     @LogAction("Sending order created event to message broker")
@@ -32,6 +31,12 @@ public class OrderApplicationInternalDomainEventsListener {
     @LogAction("Sending order cancelled event to message broker")
     void process(OrderCancelledEvent event) {
         orderCancelledMessagePublisher.publish(event);
+    }
+
+    @TransactionalEventListener
+    @LogAction("Sending order completed event to message broker")
+    void process(OrderCompletedEvent event) {
+        orderCompletedEventPublisher.publish(event);
     }
 
     @TransactionalEventListener

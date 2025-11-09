@@ -62,6 +62,8 @@ kafka:
     payment-failed: payments-failed
     payment-verified: payments-verified
     payment-complete: payments-complete
+    restaurant-event: restaurant-event
+    order-completed: order-completed
 
 logging:
   level:

@@ -13,6 +13,7 @@ import commonmodule.domain.values.RestaurantId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderMapper {
@@ -78,15 +79,15 @@ public class OrderMapper {
     }
 
     @SuppressWarnings("unchecked")
-    private static List<String> getFailureMessagesFromString(String failureMessages) {
+    private static ArrayList<String> getFailureMessagesFromString(String failureMessages) {
         if (failureMessages == null || failureMessages.isEmpty()) {
-            return List.of();
+            return new ArrayList<>();
         }
         try {
-            return objectMapper.readValue(failureMessages, List.class);
+            return objectMapper.readValue(failureMessages, ArrayList.class);
         } catch (JsonProcessingException e) {
             log.error("Could not convert failure messages from string: {}", e.getMessage());
-            return List.of();
+            return new ArrayList<>();
         }
     }
 }

@@ -3,14 +3,12 @@ package cadsok.order.domain.core.services;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Product;
 import cadsok.order.domain.core.entity.Restaurant;
-import cadsok.order.domain.core.event.OrderCancelledEvent;
-import cadsok.order.domain.core.event.OrderCreatedEvent;
-import cadsok.order.domain.core.event.OrderPaidEvent;
-import cadsok.order.domain.core.event.OrderPaymentValidEvent;
+import cadsok.order.domain.core.event.*;
 import cadsok.order.domain.core.exception.OrderDomainException;
 import commonmodule.domain.values.DateTimeUtil;
 import commonmodule.domain.values.Money;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDomainServiceImpl implements OrderDomainService {
@@ -70,19 +68,15 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public void approveOrder(Order order) {
+    public OrderCompletedEvent approveOrder(Order order) {
         order.approve();
+        return new OrderCompletedEvent(order, DateTimeUtil.now());
     }
 
     @Override
-    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
-        order.initCancel(failureMessages);
+    public OrderCancelledEvent cancelOrder(Order order, List<String> failureMessages) {
+        order.cancel(new ArrayList<>(failureMessages));
         return new OrderCancelledEvent(order, DateTimeUtil.now());
-    }
-
-    @Override
-    public void cancelOrder(Order order, List<String> failureMessages) {
-        order.cancel(failureMessages);
     }
 
 }

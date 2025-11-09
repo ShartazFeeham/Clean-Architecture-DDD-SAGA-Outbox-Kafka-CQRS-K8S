@@ -6,6 +6,7 @@ import cadsok.order.domain.core.exception.OrderDomainException;
 import cadsok.order.domain.core.values.StreetAddress;
 import cadsok.order.domain.core.values.TrackingId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class Order extends AggregateRoot<OrderId> {
     private final StreetAddress deliveryAddress;
     // Order details: items
     private final List<OrderItem> items;
-    private List<String> failureMessages;
+    private ArrayList<String> failureMessages;
 
     public void initializeOrder() {
         setId(new OrderId(UUID.randomUUID()));
@@ -88,7 +89,7 @@ public class Order extends AggregateRoot<OrderId> {
         orderStatus = OrderStatus.COMPLETED;
     }
 
-    public void initCancel(List<String> failureMessages) {
+    public void initCancel(ArrayList<String> failureMessages) {
         if (orderStatus != OrderStatus.PAID) {
             throw new OrderDomainException("Order is not in correct state for initCancel operation");
         }
@@ -96,15 +97,12 @@ public class Order extends AggregateRoot<OrderId> {
         updateFailureMessages(failureMessages);
     }
 
-    public void cancel(List<String> failureMessages) {
-        if (!(orderStatus == OrderStatus.CANCELLING || orderStatus == OrderStatus.PENDING)) {
-            throw new OrderDomainException("Order is not in correct state for cancel operation");
-        }
+    public void cancel(ArrayList<String> failureMessages) {
         orderStatus = OrderStatus.CANCELLED;
         updateFailureMessages(failureMessages);
     }
 
-    private void updateFailureMessages(List<String> failureMessages) {
+    private void updateFailureMessages(ArrayList<String> failureMessages) {
         if (this.failureMessages != null && failureMessages != null) {
             this.failureMessages.addAll(failureMessages);
         }
@@ -166,7 +164,7 @@ public class Order extends AggregateRoot<OrderId> {
         private List<OrderItem> items;
         private TrackingId trackingId;
         private OrderStatus orderStatus;
-        private List<String> failureMessages;
+        private ArrayList<String> failureMessages;
 
         private Builder() {
         }
@@ -220,7 +218,7 @@ public class Order extends AggregateRoot<OrderId> {
             return this;
         }
 
-        public Builder failureMessages(List<String> val) {
+        public Builder failureMessages(ArrayList<String> val) {
             failureMessages = val;
             return this;
         }

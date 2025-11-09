@@ -1,0 +1,81 @@
+package cadsok.order.domain.application.services.events;
+
+import cadsok.order.domain.application.ports.input.message.listener.restaurant.RestaurantMessageListener;
+import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCancelledMessagePublisher;
+import cadsok.order.domain.application.ports.output.message.publisher.payment.OrderCompletedMessagePublisher;
+import cadsok.order.domain.application.ports.output.repository.OrderRepository;
+import cadsok.order.domain.core.entity.Order;
+import cadsok.order.domain.core.event.OrderCancelledEvent;
+import cadsok.order.domain.core.event.OrderCompletedEvent;
+import cadsok.order.domain.core.exception.OrderNotFoundException;
+import cadsok.order.domain.core.services.OrderDomainService;
+import cadsok.order.domain.core.values.TrackingId;
+import commonmodule.domain.values.OrderId;
+import commonmodule.domain.values.OrderStatus;
+import commonmodule.infra.logging.LogAction;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Validated
+@Service
+@Slf4j
+public class RestaurantMessageListenerImpl implements RestaurantMessageListener {
+
+    private final OrderRepository orderRepository;
+    private final OrderCancelledMessagePublisher orderCancelledMessagePublisher;
+    private final OrderCompletedMessagePublisher orderCompletedMessagePublisher;
+    private final OrderDomainService orderDomainService;
+
+    public RestaurantMessageListenerImpl
+            (OrderRepository orderRepository,
+             OrderCancelledMessagePublisher orderCancelledMessagePublisher, OrderCompletedMessagePublisher orderCompletedMessagePublisher,
+             OrderDomainService orderDomainService) {
+        this.orderRepository = orderRepository;
+        this.orderCancelledMessagePublisher = orderCancelledMessagePublisher;
+        this.orderCompletedMessagePublisher = orderCompletedMessagePublisher;
+        this.orderDomainService = orderDomainService;
+    }
+
+    @Override
+    @Transactional
+    public void orderApproved(String orderId, boolean approved) {
+        if (approved) {
+            orderApproved(orderId);
+        } else {
+            orderRejected(orderId);
+        }
+    }
+
+    @LogAction(value = "Processing restaurant approval", identifiers = {"orderId"})
+    private void orderApproved(String orderId) {
+        Order order = getOrder(orderId);
+        OrderCompletedEvent event = orderDomainService.approveOrder(order);
+        orderRepository.updateStatus(new OrderId(UUID.fromString(orderId)), OrderStatus.COMPLETED);
+        orderCompletedMessagePublisher.publish(event);
+    }
+
+    @LogAction(value = "Processing restaurant rejection", identifiers = {"orderId"})
+    public void orderRejected(String orderId) {
+        Order order = getOrder(orderId);
+        OrderCancelledEvent orderCancelledEvent = orderDomainService
+                .cancelOrder(order, new ArrayList<>(List.of("Restaurant rejected offer.")));
+        orderRepository.updateStatus(new OrderId(UUID.fromString(orderId)), OrderStatus.CANCELLED);
+        orderCancelledMessagePublisher.publish(orderCancelledEvent);
+    }
+
+    private Order getOrder(String orderId) {
+        UUID orderIdUUID = UUID.fromString(orderId);
+        Optional<Order> orderOp = orderRepository.findByTrackingId(new TrackingId(orderIdUUID));
+        if (orderOp.isEmpty()) {
+            throw new OrderNotFoundException("Order with id " + orderId + " not found");
+        }
+        return orderOp.get();
+    }
+}
