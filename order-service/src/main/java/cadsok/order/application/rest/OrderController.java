@@ -32,4 +32,10 @@ public class OrderController {
                orderApplicationService.trackOrder(TrackOrderQuery.builder().orderTrackingId(trackingId).build());
        return  ResponseEntity.ok(trackOrderResponse);
     }
+
+    @DeleteMapping
+    public ResponseEntity<String> cancelOrder(@RequestParam String trackingId) {
+        orderApplicationService.cancelOrder(trackingId);
+        return  ResponseEntity.ok("Request submitted for cancelling order.");
+    }
 }

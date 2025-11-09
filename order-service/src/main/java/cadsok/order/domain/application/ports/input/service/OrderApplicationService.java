@@ -12,4 +12,5 @@ public interface OrderApplicationService {
 
     TrackOrderResponse trackOrder(@Valid TrackOrderQuery query);
 
+    void cancelOrder(String orderId);
 }

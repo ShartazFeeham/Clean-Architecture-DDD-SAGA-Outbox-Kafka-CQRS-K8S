@@ -7,6 +7,7 @@ import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.event.OrderCancelledEvent;
 import cadsok.order.domain.core.event.OrderCompletedEvent;
+import cadsok.order.domain.core.exception.OrderDomainException;
 import cadsok.order.domain.core.exception.OrderNotFoundException;
 import cadsok.order.domain.core.services.OrderDomainService;
 import cadsok.order.domain.core.values.TrackingId;
@@ -64,10 +65,17 @@ public class RestaurantMessageListenerImpl implements RestaurantMessageListener 
     @LogAction(value = "Processing restaurant rejection", identifiers = {"orderId"})
     public void orderRejected(String orderId) {
         Order order = getOrder(orderId);
+        validateIfOrderIsAlreadyCompletedOrCancelled(order);
         OrderCancelledEvent orderCancelledEvent = orderDomainService
                 .cancelOrder(order, new ArrayList<>(List.of("Restaurant rejected offer.")));
         orderRepository.updateStatus(new OrderId(UUID.fromString(orderId)), OrderStatus.CANCELLED);
         orderCancelledMessagePublisher.publish(orderCancelledEvent);
+    }
+
+    private void validateIfOrderIsAlreadyCompletedOrCancelled(Order order) {
+        if (order.getOrderStatus() == OrderStatus.COMPLETED || order.getOrderStatus() == OrderStatus.CANCELLED) {
+            throw new OrderDomainException("Can't cancel an order that is already completed or cancelled");
+        }
     }
 
     private Order getOrder(String orderId) {
