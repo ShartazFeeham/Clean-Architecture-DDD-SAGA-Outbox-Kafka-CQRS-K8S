@@ -85,7 +85,7 @@ public class Order extends AggregateRoot<OrderId> {
         if (orderStatus != OrderStatus.PAID) {
             throw new OrderDomainException("Order is not in correct state for approve operation");
         }
-        orderStatus = OrderStatus.APPROVED;
+        orderStatus = OrderStatus.COMPLETED;
     }
 
     public void initCancel(List<String> failureMessages) {

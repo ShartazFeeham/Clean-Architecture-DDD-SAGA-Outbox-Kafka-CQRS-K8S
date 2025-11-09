@@ -10,7 +10,7 @@ public class OrderStatusMapper {
     private static final Map<Integer, OrderStatus> dbToDomainMap = Map.of(
             0, OrderStatus.PENDING,
             1, OrderStatus.PAID,
-            2, OrderStatus.APPROVED,
+            2, OrderStatus.COMPLETED,
             3, OrderStatus.CANCELLING,
             4, OrderStatus.CANCELLED
     );
