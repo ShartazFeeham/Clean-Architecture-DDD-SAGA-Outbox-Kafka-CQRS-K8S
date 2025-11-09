@@ -46,11 +46,11 @@ public class RestaurantMessageListenerImpl implements RestaurantMessageListener 
 
     @Override
     @Transactional
-    public void orderApproved(String orderId, boolean approved) {
+    public void orderApproved(String orderId, boolean approved, String message) {
         if (approved) {
             orderApproved(orderId);
         } else {
-            orderRejected(orderId);
+            orderRejected(orderId, message);
         }
     }
 
@@ -63,11 +63,11 @@ public class RestaurantMessageListenerImpl implements RestaurantMessageListener 
     }
 
     @LogAction(value = "Processing restaurant rejection", identifiers = {"orderId"})
-    public void orderRejected(String orderId) {
+    public void orderRejected(String orderId, String message) {
         Order order = getOrder(orderId);
         validateIfOrderIsAlreadyCompletedOrCancelled(order);
         OrderCancelledEvent orderCancelledEvent = orderDomainService
-                .cancelOrder(order, new ArrayList<>(List.of("Restaurant rejected offer.")));
+                .cancelOrder(order, new ArrayList<>(List.of(message)));
         orderRepository.updateStatus(new OrderId(UUID.fromString(orderId)), OrderStatus.CANCELLED);
         orderCancelledMessagePublisher.publish(orderCancelledEvent);
     }

@@ -37,6 +37,6 @@ class OrderApplicationServiceImpl implements OrderApplicationService {
 
     @Override
     public void cancelOrder(String orderId) {
-        restaurantMessageListener.orderApproved(orderId, false);
+        restaurantMessageListener.orderApproved(orderId, false, "Client cancelled order");
     }
 }

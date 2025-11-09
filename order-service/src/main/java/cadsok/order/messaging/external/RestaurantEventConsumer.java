@@ -1,6 +1,5 @@
 package cadsok.order.messaging.external;
 
-import cadsok.order.domain.application.ports.input.message.listener.payment.PaymentResponseMessageListener;
 import cadsok.order.domain.application.ports.input.message.listener.restaurant.RestaurantMessageListener;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +31,7 @@ public class RestaurantEventConsumer {
             String status = root.path("status").asText();
 
             boolean approved = status != null && status.equals("ACCEPTED");
-            restaurantMessageListener.orderApproved(orderId, approved);
+            restaurantMessageListener.orderApproved(orderId, approved, "Restaurant cancelled order");
 
         } catch (Exception e) {
             log.error("Error processing payment validation message; will be retried or sent to DLQ", e);
