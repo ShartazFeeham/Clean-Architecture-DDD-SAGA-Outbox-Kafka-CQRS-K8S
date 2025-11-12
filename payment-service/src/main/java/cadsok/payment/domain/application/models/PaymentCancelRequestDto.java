@@ -1,4 +1,4 @@
 package cadsok.payment.domain.application.models;
 
-public record PaymentCancelRequestDto(String paymentId) {
+public record PaymentCancelRequestDto(String orderTrackingId) {
 }

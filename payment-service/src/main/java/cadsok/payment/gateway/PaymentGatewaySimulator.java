@@ -10,4 +10,8 @@ public class PaymentGatewaySimulator {
     public boolean succeed() {
         return ThreadLocalRandom.current().nextInt(100) < 70;
     }
+    // Returns true ~70% of the time
+    public boolean rollbackPayment() {
+        return ThreadLocalRandom.current().nextInt(100) < 70;
+    }
 }

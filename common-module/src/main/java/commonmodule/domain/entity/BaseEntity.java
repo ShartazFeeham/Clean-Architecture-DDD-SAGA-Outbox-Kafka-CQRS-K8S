@@ -1,7 +1,13 @@
 package commonmodule.domain.entity;
 
+import jakarta.persistence.MappedSuperclass;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class BaseEntity <ID> {
     private ID id;
 
@@ -24,5 +30,19 @@ public abstract class BaseEntity <ID> {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @CreatedDate
+    private ZonedDateTime createdAt;
+
+    public ZonedDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    @LastModifiedDate
+    private ZonedDateTime updatedAt;
+
+    public ZonedDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }

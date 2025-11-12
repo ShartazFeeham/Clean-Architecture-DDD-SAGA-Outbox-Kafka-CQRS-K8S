@@ -16,6 +16,8 @@ public class PaymentApplicationInternalDomainEventListener {
     private final PaymentIFailedMessagePublisher paymentIFailedMessagePublisher;
     private final PaymentInitializedMessagePublisher paymentInitializedMessagePublisher;
     private final PaymentProcessingMessagePublisher paymentProcessingMessagePublisher;
+    private final PaymentRollbackSuccessMessagePublisher paymentRollbackSuccessMessagePublisher;
+    private final PaymentRollbackFailedMessagePublisher paymentRollbackFailedMessagePublisher;
 
     @TransactionalEventListener
     @LogAction("Sending payment cancelled event to message broker.")
@@ -45,5 +47,17 @@ public class PaymentApplicationInternalDomainEventListener {
     @LogAction("Sending payment processing event to message broker.")
     void process(PaymentProcessingEvent event) {
         paymentProcessingMessagePublisher.publish(event);
+    }
+
+    @TransactionalEventListener
+    @LogAction("Sending payment rollback success event to message broker.")
+    void process(PaymentRollbackSucceedEvent event) {
+        paymentRollbackSuccessMessagePublisher.publish(event);
+    }
+
+    @TransactionalEventListener
+    @LogAction("Sending payment rollback failed event to message broker.")
+    void process(PaymentRollbackFailedEvent event) {
+        paymentRollbackFailedMessagePublisher.publish(event);
     }
 }

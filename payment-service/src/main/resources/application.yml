@@ -53,3 +53,6 @@ kafka:
     payment-complete: payments-complete
     payment-failed: payments-failed
     payment-cancel: payments-cancel
+    order-cancelled: order-cancelled
+    payment-rollback-failed: payment-rollback-failed
+    payment-rollback-success: payment-rollback-success

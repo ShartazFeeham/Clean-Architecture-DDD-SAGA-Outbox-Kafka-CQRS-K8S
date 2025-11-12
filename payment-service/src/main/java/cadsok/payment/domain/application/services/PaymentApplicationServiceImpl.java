@@ -8,6 +8,7 @@ import cadsok.payment.domain.application.ports.output.repository.PaymentReposito
 import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentInitializedEvent;
+import cadsok.payment.domain.core.exception.PaymentDomainException;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
 import cadsok.payment.domain.core.values.PaymentId;
@@ -46,8 +47,8 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
     }
 
     private void validateIfAlreadyAPaymentActiveForSameOrder(Payment payment) {
-        if(paymentRepository.isPaymentExistForOrder(payment.getOrderId())) {
-            // throw new PaymentDomainException("There is already a payment existing for the same order");
+        if(paymentRepository.getPaymentByOrderId(payment.getOrderId()).isPresent()) {
+             throw new PaymentDomainException("There is already a payment existing for the same order");
         }
     }
 

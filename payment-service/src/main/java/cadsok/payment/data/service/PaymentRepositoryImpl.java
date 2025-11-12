@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +35,13 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
-    public boolean isPaymentExistForOrder(OrderId orderId) {
-        int existingActivePayments = paymentJpaRepository.findByOrderId(orderId.getValue())
-                .stream()
-                .filter(payment -> payment.getPaymentStatus() != PaymentStatus.FAILED
-                        && PaymentStatus.CANCELLED != payment.getPaymentStatus())
-                .toList()
-                .size();
-        return existingActivePayments > 0;
+    public Payment updatePayment(Payment payment) {
+        return null;
+    }
+
+    @Override
+    public Optional<Payment> getPaymentByOrderId(OrderId orderId) {
+        Optional<PaymentEntity> byOrderId = paymentJpaRepository.findByOrderId(orderId.getValue());
+        return byOrderId.map(PaymentDbMapper::toPayment);
     }
 }

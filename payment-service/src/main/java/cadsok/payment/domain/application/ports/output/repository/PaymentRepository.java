@@ -12,5 +12,7 @@ public interface PaymentRepository {
 
     Payment savePayment(Payment payment);
 
-    boolean isPaymentExistForOrder(OrderId orderId);
+    Payment updatePayment(Payment payment);
+
+    Optional<Payment> getPaymentByOrderId(OrderId orderId);
 }
