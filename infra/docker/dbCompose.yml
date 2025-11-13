@@ -18,6 +18,8 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - order-service-pg-db_local_data:/var/lib/postgresql/data
+    # 🚨 CDC CONFIGURATION ADDED 🚨
+    command: postgres -c wal_level=logical -c max_wal_senders=4 -c max_replication_slots=4 -c listen_addresses='*'
 
   # Postgres database for payment-service
   storage-payment-service-pg-db:
@@ -35,6 +37,8 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - payment-service-pg-db_local_data:/var/lib/postgresql/data
+    # 🚨 CDC CONFIGURATION ADDED 🚨
+    command: postgres -c wal_level=logical -c max_wal_senders=4 -c max_replication_slots=4 -c listen_addresses='*'
 
   # Postgres database for restaurant-service
   storage-restaurant-service-pg-db:
@@ -52,6 +56,8 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - restaurant-service-pg-db_local_data:/var/lib/postgresql/data
+    # 🚨 CDC CONFIGURATION ADDED 🚨
+    command: postgres -c wal_level=logical -c max_wal_senders=4 -c max_replication_slots=4 -c listen_addresses='*'
 
   # PG Admin for postgres database UI
   storage-pg-admin-postgres-ui:

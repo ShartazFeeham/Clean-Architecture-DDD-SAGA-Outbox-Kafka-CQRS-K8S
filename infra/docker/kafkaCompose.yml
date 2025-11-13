@@ -103,6 +103,31 @@ services:
       - kafka2
       - kafka3
 
+  # 🚀 DEBEZIUM CONNECT SERVICE ADDED FOR OUTBOX PATTERN 🚀
+  debezium-connect:
+    extends:
+      file: docker-general-configs.yml
+      service: common-config-initial-400m
+    image: debezium/connect:2.7.3.Final
+    hostname: debezium-connect
+    container_name: debezium-connect
+    ports:
+      - "8083:8083" # Kafka Connect REST API port
+    environment:
+      # Use INTERNAL listener of kafka1
+      BOOTSTRAP_SERVERS: kafka1:19092
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: my_connect_configs
+      OFFSET_STORAGE_TOPIC: my_connect_offsets
+      STATUS_STORAGE_TOPIC: my_connect_statuses
+      # Make sure Connect can reach Zookeeper
+      ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - zookeeper
+
   postgresql:
     extends:
       file: docker-general-configs.yml

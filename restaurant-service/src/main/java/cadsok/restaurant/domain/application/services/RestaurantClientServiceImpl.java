@@ -1,13 +1,15 @@
 package cadsok.restaurant.domain.application.services;
 
 import cadsok.restaurant.data.entity.AcceptanceStatus;
+import cadsok.restaurant.data.entity.RestaurantOutbox;
 import cadsok.restaurant.domain.application.ports.input.client.RestaurantClientService;
 import cadsok.restaurant.domain.application.ports.output.repository.RestaurantRepository;
-import cadsok.restaurant.domain.application.services.events.base.RestaurantApplicationInternalDomainEventPublisher;
 import cadsok.restaurant.domain.core.event.RestaurantApprovedEvent;
 import cadsok.restaurant.domain.core.event.RestaurantEvent;
 import cadsok.restaurant.domain.core.service.RestaurantDomainService;
+import cadsok.restaurant.messaging.outbox.OutboxService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,10 @@ public class RestaurantClientServiceImpl implements RestaurantClientService {
 
     private final RestaurantRepository restaurantRepository;
     private final RestaurantDomainService restaurantDomainService;
-    private final RestaurantApplicationInternalDomainEventPublisher restaurantApplicationInternalDomainEventPublisher;
+    private final OutboxService outboxService;
+
+    @Value("${kafka.topic-names.restaurant-event}")
+    private String topicName;
 
     @Override
     @Transactional
@@ -29,7 +34,18 @@ public class RestaurantClientServiceImpl implements RestaurantClientService {
         AcceptanceStatus status = restaurantEvent instanceof RestaurantApprovedEvent ?
                 AcceptanceStatus.ACCEPTED : AcceptanceStatus.REJECTED;
         restaurantRepository.updateStatus(orderId, status);
-        restaurantApplicationInternalDomainEventPublisher.publish(restaurantEvent);
+
+        RestaurantOutbox outboxEntity = getRestaurantOutboxEntity(orderId, restaurantEvent);
+        outboxService.handle(outboxEntity, restaurantEvent, topicName);
+    }
+
+    private RestaurantOutbox getRestaurantOutboxEntity(String orderId, RestaurantEvent restaurantEvent) {
+        String eventType = restaurantEvent.getClass().getSimpleName();
+        return RestaurantOutbox.builder()
+                .aggregateType(topicName)
+                .aggregateId(orderId)
+                .type(eventType)
+                .build();
     }
 
     @Override
