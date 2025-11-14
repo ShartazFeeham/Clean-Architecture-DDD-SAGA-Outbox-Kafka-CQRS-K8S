@@ -20,10 +20,11 @@ public class OutboxServiceImpl implements OutboxService {
 
     @Override
     @Transactional
-    public void handle(RestaurantOutbox outboxEntity, RestaurantEvent restaurantEvent, String topicName) {
+    public void handle(RestaurantEvent restaurantEvent, String topicName) {
         try {
             String payload = objectMapper.writeValueAsString(restaurantEvent);
-            outboxEntity.setPayload(payload);
+            String eventType = restaurantEvent.getClass().getSimpleName();
+            var outboxEntity = RestaurantOutbox.create(payload, topicName, restaurantEvent.getOrderId(), eventType);
             restaurantOutboxRepository.save(outboxEntity);
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize domain event for outbox: {}", e.getMessage());

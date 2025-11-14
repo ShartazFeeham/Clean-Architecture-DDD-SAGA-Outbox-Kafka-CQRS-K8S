@@ -1,7 +1,6 @@
 package cadsok.restaurant.domain.application.services;
 
 import cadsok.restaurant.data.entity.AcceptanceStatus;
-import cadsok.restaurant.data.entity.RestaurantOutbox;
 import cadsok.restaurant.domain.application.ports.input.client.RestaurantClientService;
 import cadsok.restaurant.domain.application.ports.output.repository.RestaurantRepository;
 import cadsok.restaurant.domain.core.event.RestaurantApprovedEvent;
@@ -34,18 +33,7 @@ public class RestaurantClientServiceImpl implements RestaurantClientService {
         AcceptanceStatus status = restaurantEvent instanceof RestaurantApprovedEvent ?
                 AcceptanceStatus.ACCEPTED : AcceptanceStatus.REJECTED;
         restaurantRepository.updateStatus(orderId, status);
-
-        RestaurantOutbox outboxEntity = getRestaurantOutboxEntity(orderId, restaurantEvent);
-        outboxService.handle(outboxEntity, restaurantEvent, topicName);
-    }
-
-    private RestaurantOutbox getRestaurantOutboxEntity(String orderId, RestaurantEvent restaurantEvent) {
-        String eventType = restaurantEvent.getClass().getSimpleName();
-        return RestaurantOutbox.builder()
-                .aggregateType(topicName)
-                .aggregateId(orderId)
-                .type(eventType)
-                .build();
+        outboxService.handle(restaurantEvent, topicName);
     }
 
     @Override
