@@ -2,18 +2,18 @@ package cadsok.payment.domain.application.services.events;
 
 import cadsok.payment.domain.application.ports.input.event.PaymentRollbackEventListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
-import cadsok.payment.domain.core.event.PaymentRollbackEvent;
 import cadsok.payment.domain.core.event.PaymentRollbackFailedEvent;
 import cadsok.payment.domain.core.event.PaymentRollbackSucceedEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.values.PaymentId;
 import cadsok.payment.gateway.PaymentGatewaySimulator;
+import cadsok.payment.messaging.outbox.OutboxService;
 import commonmodule.domain.values.DateTimeUtil;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +24,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentRollbackEventListenerImpl implements PaymentRollbackEventListener {
 
-    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
+    private final OutboxService outboxService;
     private final PaymentGatewaySimulator paymentGatewaySimulator;
     private final PaymentRepository paymentRepository;
+
+    @Value("${kafka.topic-names.payment-rollback-success}")
+    private String paymentRollbackSucceedTopicName;
+
+    @Value("${kafka.topic-names.payment-rollback-failed}")
+    private String paymentRollbackFailedTopicName;
 
     @Override
     @Transactional
@@ -35,11 +41,14 @@ public class PaymentRollbackEventListenerImpl implements PaymentRollbackEventLis
         Payment payment = getPaymentIfExist(paymentId);
         boolean rolledBack = paymentGatewaySimulator.rollbackPayment();
 
-        PaymentRollbackEvent rollbackEvent = rolledBack ?
-                new PaymentRollbackSucceedEvent(payment, DateTimeUtil.now())
-                : new PaymentRollbackFailedEvent(payment,  DateTimeUtil.now());
+        if (rolledBack) {
+            PaymentRollbackSucceedEvent event = new PaymentRollbackSucceedEvent(payment, DateTimeUtil.now());
+            outboxService.handle(event, paymentRollbackSucceedTopicName);
+        } else {
+            PaymentRollbackFailedEvent event = new PaymentRollbackFailedEvent(payment, DateTimeUtil.now());
+            outboxService.handle(event, paymentRollbackFailedTopicName);
+        }
 
-        paymentApplicationInternalDomainEventPublisher.publish(rollbackEvent);
     }
 
     private Payment getPaymentIfExist(String paymentId) {

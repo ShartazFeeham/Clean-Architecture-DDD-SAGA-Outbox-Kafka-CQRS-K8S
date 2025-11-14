@@ -5,16 +5,17 @@ import cadsok.payment.domain.application.models.PaymentCreateRequestDto;
 import cadsok.payment.domain.application.models.PaymentTrackingResponseDto;
 import cadsok.payment.domain.application.ports.input.client.PaymentApplicationService;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentInitializedEvent;
 import cadsok.payment.domain.core.exception.PaymentDomainException;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
 import cadsok.payment.domain.core.values.PaymentId;
+import cadsok.payment.messaging.outbox.OutboxService;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +26,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentApplicationServiceImpl implements PaymentApplicationService {
 
+    private final OutboxService outboxService;
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
+
+    @Value("${kafka.topic-names.payment-initialized}")
+    private String paymentInitializedEventTopicName;
 
     @Override
     public PaymentTrackingResponseDto track(String paymentId) {
@@ -42,7 +46,7 @@ public class PaymentApplicationServiceImpl implements PaymentApplicationService 
         validateIfAlreadyAPaymentActiveForSameOrder(payment);
         PaymentInitializedEvent event = paymentDomainService.initializePayment(payment);
         payment = paymentRepository.savePayment(payment);
-        paymentApplicationInternalDomainEventPublisher.publish(event);
+        outboxService.handle(event, paymentInitializedEventTopicName);
         return PaymentMapper.toResponse(payment);
     }
 

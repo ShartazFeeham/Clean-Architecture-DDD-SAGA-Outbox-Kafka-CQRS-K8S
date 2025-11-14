@@ -3,16 +3,16 @@ package cadsok.payment.domain.application.services.events;
 import cadsok.payment.domain.application.models.PaymentCancelRequestDto;
 import cadsok.payment.domain.application.ports.input.event.PaymentCancelEventListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentCancelledEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
-import cadsok.payment.domain.core.values.PaymentId;
+import cadsok.payment.messaging.outbox.OutboxService;
 import commonmodule.domain.values.OrderId;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +23,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentCancelEventListenerImpl implements PaymentCancelEventListener {
 
+    private final OutboxService outboxService;
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
+
+    @Value("${kafka.topic-names.payment-cancel}")
+    private String paymentCancelledEventTopicName;
 
     @Override
     @Transactional
@@ -35,7 +38,7 @@ public class PaymentCancelEventListenerImpl implements PaymentCancelEventListene
         Payment payment = getPaymentIfExist(trackingId);
         PaymentCancelledEvent event = paymentDomainService.cancel(payment);
         paymentRepository.savePayment(payment);
-        paymentApplicationInternalDomainEventPublisher.publish(event);
+        outboxService.handle(event, paymentCancelledEventTopicName);
     }
 
     private Payment getPaymentIfExist(String trackingId) {

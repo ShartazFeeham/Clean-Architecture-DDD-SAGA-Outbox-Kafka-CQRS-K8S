@@ -21,7 +21,7 @@ public class OrderPaidEventConsumer {
     private final ObjectMapper objectMapper;
     private final OrderPaidEventListener orderPaidEventListener;
 
-    @KafkaListener(topics = "${kafka.topic-names.order-paid}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.order-paid-con}", groupId = "${kafka.consumer.group.id}")
     @LogAction("Consuming order paid event and saving data in database")
     public void onPaymentProcessing(ConsumerRecord<String, String> record) {
         try {

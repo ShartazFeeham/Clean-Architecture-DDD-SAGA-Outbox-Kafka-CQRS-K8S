@@ -23,7 +23,7 @@ public class OrderCancelledEventConsumer {
     private final ObjectMapper objectMapper;
     private final PaymentCancelEventListener paymentCancelEventListener;
 
-    @KafkaListener(topics = "${kafka.topic-names.order-cancelled}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.order-cancelled-con}", groupId = "${kafka.consumer.group.id}")
     @LogAction("Consuming payment verified event")
     public void onPaymentVerified(ConsumerRecord<String, String> record) {
         try {

@@ -22,7 +22,7 @@ public class PaymentCompletedEventConsumer {
         this.paymentResponseMessageListener = paymentResponseMessageListener;
     }
 
-    @KafkaListener(topics = "${kafka.topic-names.payment-complete}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.payment-complete-con}", groupId = "${kafka.consumer.group.id}")
     public void consumeMessage(ConsumerRecord<String, String> record) {
         log.info("Consumed message: Key: {}, Topic: {}, Partition: {}, Offset: {}",
                 record.key(), record.topic(), record.partition(), record.offset());

@@ -30,7 +30,7 @@ public class PaymentProcessingExecutorConsumer {
     private final ObjectMapper objectMapper;
     private final PaymentGatewayMessageListener paymentGatewayMessageListener;
 
-    @KafkaListener(topics = "${kafka.topic-names.payment-processing}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.payment-processing-con}", groupId = "${kafka.consumer.group.id}")
     @LogAction("Consuming payment processing event and executing payment")
     public void onPaymentProcessing(ConsumerRecord<String, String> record) {
         try {

@@ -21,7 +21,7 @@ public class PaymentVerifiedEventConsumer {
     private final ObjectMapper objectMapper;
     private final PaymentVerificationMessageListener paymentVerificationMessageListener;
 
-    @KafkaListener(topics = "${kafka.topic-names.payment-verified}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.payment-verified-con}", groupId = "${kafka.consumer.group.id}")
     @LogAction("Consuming payment verified event")
     public void onPaymentVerified(ConsumerRecord<String, String> record) {
         try {

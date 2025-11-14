@@ -3,15 +3,16 @@ package cadsok.payment.domain.application.services.events;
 import cadsok.payment.domain.application.models.PaymentInfoVarificationDto;
 import cadsok.payment.domain.application.ports.input.event.PaymentVerificationMessageListener;
 import cadsok.payment.domain.application.ports.output.repository.PaymentRepository;
-import cadsok.payment.domain.application.services.events.base.PaymentApplicationInternalDomainEventPublisher;
 import cadsok.payment.domain.core.entity.Payment;
 import cadsok.payment.domain.core.event.PaymentEvent;
 import cadsok.payment.domain.core.exception.PaymentNotFoundException;
 import cadsok.payment.domain.core.services.PaymentDomainService;
 import cadsok.payment.domain.core.values.PaymentId;
+import cadsok.payment.messaging.outbox.OutboxService;
 import commonmodule.infra.logging.LogAction;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +23,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentVerificationMessageListenerImpl implements PaymentVerificationMessageListener {
 
+    private final OutboxService outboxService;
     private final PaymentRepository paymentRepository;
     private final PaymentDomainService paymentDomainService;
-    private final PaymentApplicationInternalDomainEventPublisher paymentApplicationInternalDomainEventPublisher;
+
+    @Value("${kafka.topic-names.payment-processing}")
+    private String paymentProcessingEventTopicName;
+
+    @Value("${kafka.topic-names.payment-failed}")
+    private String paymentFailedEventTopicName;
 
     @Override
     @LogAction(value = "Handling payment-verification event.")
@@ -36,12 +43,13 @@ public class PaymentVerificationMessageListenerImpl implements PaymentVerificati
         PaymentEvent event;
         if (paymentInfoVarificationDto.isValid()) {
             event = paymentDomainService.verifyAndProcessEvent(payment);
+            outboxService.handle(event, paymentProcessingEventTopicName);
         } else {
             event = paymentDomainService.failedPayment(payment);
+            outboxService.handle(event, paymentFailedEventTopicName);
         }
 
         paymentRepository.savePayment(payment);
-        paymentApplicationInternalDomainEventPublisher.publish(event);
     }
 
     private Payment getPaymentIfExist(String paymentId) {

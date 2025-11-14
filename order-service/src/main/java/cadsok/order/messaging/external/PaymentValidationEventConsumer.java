@@ -22,7 +22,7 @@ public class PaymentValidationEventConsumer {
         this.paymentResponseMessageListener = paymentResponseMessageListener;
     }
 
-    @KafkaListener(topics = "${kafka.topic-names.payment-initialized}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.payment-initialized-con}", groupId = "${kafka.consumer.group.id}")
     public void consumeMessage(ConsumerRecord<String, String> record) {
         log.info("Consumed message: Key: {}, Topic: {}, Partition: {}, Offset: {}",
                 record.key(), record.topic(), record.partition(), record.offset());

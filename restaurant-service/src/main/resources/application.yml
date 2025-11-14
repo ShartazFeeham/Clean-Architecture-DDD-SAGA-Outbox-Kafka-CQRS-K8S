@@ -42,6 +42,7 @@ kafka:
   # TOPICS
   topic-names:
     order-paid: order-paid
+    order-paid-con: outbox.event.order-paid
     restaurant-event: restaurant-event
 
 logging:

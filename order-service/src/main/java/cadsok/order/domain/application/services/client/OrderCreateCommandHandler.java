@@ -6,16 +6,17 @@ import cadsok.order.domain.application.models.create.CreateOrderResponse;
 import cadsok.order.domain.application.ports.output.repository.CustomerRepository;
 import cadsok.order.domain.application.ports.output.repository.OrderRepository;
 import cadsok.order.domain.application.ports.output.repository.RestaurantRepository;
-import cadsok.order.domain.application.services.events.base.OrderApplicationInternalDomainEventPublisher;
 import cadsok.order.domain.core.entity.Customer;
 import cadsok.order.domain.core.entity.Order;
 import cadsok.order.domain.core.entity.Restaurant;
 import cadsok.order.domain.core.event.OrderCreatedEvent;
 import cadsok.order.domain.core.exception.OrderDomainException;
 import cadsok.order.domain.core.services.OrderDomainService;
+import cadsok.order.messaging.outbox.OutboxService;
 import commonmodule.infra.logging.Auditable;
 import commonmodule.infra.logging.LogAction;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,27 +28,29 @@ import java.util.UUID;
 class OrderCreateCommandHandler {
 
     private final OrderDataMapper orderDomainMapper;
-    private final OrderApplicationInternalDomainEventPublisher orderApplicationInternalDomainEventPublisher;
     private final OrderDomainService orderDomainService;
     private final OrderRepository orderRepository;
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
     private final OrderDataMapper orderDataMapper;
+    private final OutboxService outboxService;
+
+    @Value("${kafka.topic-names.order-created}")
+    private String orderCreatedEventTopicName;
 
     OrderCreateCommandHandler(OrderDataMapper orderDomainMapper,
-                              OrderApplicationInternalDomainEventPublisher orderApplicationInternalDomainEventPublisher,
                               OrderDomainService orderDomainService,
                               OrderRepository orderRepository,
                               CustomerRepository customerRepository,
                               RestaurantRepository restaurantRepository,
-                              OrderDataMapper orderDataMapper) {
+                              OrderDataMapper orderDataMapper, OutboxService outboxService) {
         this.orderDomainMapper = orderDomainMapper;
-        this.orderApplicationInternalDomainEventPublisher = orderApplicationInternalDomainEventPublisher;
         this.orderDomainService = orderDomainService;
         this.orderRepository = orderRepository;
         this.customerRepository = customerRepository;
         this.restaurantRepository = restaurantRepository;
         this.orderDataMapper = orderDataMapper;
+        this.outboxService = outboxService;
     }
 
     @Transactional
@@ -55,13 +58,9 @@ class OrderCreateCommandHandler {
     @LogAction(value = "Creating order", identifiers = {"customerId", "restaurantId"})
     public CreateOrderResponse createOrder(CreateOrderCommand command) {
         OrderCreatedEvent orderCreatedEvent = persistOrder(command);
-        orderApplicationInternalDomainEventPublisher.publish(orderCreatedEvent);
-        CreateOrderResponse createOrderResponse = orderDomainMapper.orderToCreateOrderResponse(
+        outboxService.handle(orderCreatedEvent, orderCreatedEventTopicName);
+        return orderDomainMapper.orderToCreateOrderResponse(
                 orderCreatedEvent.getOrder(), "Order created successfully");
-
-        // TODO: payment outbox
-
-        return createOrderResponse;
     }
 
     @Transactional

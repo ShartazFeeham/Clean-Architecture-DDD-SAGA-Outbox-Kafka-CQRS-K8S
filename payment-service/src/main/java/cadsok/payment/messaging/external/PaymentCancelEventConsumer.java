@@ -20,7 +20,7 @@ public class PaymentCancelEventConsumer {
     private final ObjectMapper objectMapper;
     private final PaymentRollbackEventListener paymentRollbackEventListener;
 
-    @KafkaListener(topics = "${kafka.topic-names.payment-cancel}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.payment-cancel-con}", groupId = "${kafka.consumer.group.id}")
     @LogAction("Consuming payment cancel event for rolling back")
     public void onPaymentVerified(ConsumerRecord<String, String> record) {
         try {

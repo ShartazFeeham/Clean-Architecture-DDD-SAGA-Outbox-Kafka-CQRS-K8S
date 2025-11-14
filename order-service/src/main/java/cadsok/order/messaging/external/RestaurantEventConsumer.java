@@ -21,7 +21,7 @@ public class RestaurantEventConsumer {
         this.restaurantMessageListener = restaurantMessageListener;
     }
 
-    @KafkaListener(topics = "${kafka.topic-names.restaurant-event}", groupId = "${kafka.consumer.group.id}")
+    @KafkaListener(topics = "${kafka.topic-names.restaurant-event-con}", groupId = "${kafka.consumer.group.id}")
     public void consumeMessage(ConsumerRecord<String, String> record) {
         log.info("Consumed message: Key: {}, Topic: {}, Partition: {}, Offset: {}",
                 record.key(), record.topic(), record.partition(), record.offset());
