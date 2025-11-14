@@ -26,6 +26,7 @@ public class OutboxServiceImpl implements OutboxService {
             String eventType = orderEvent.getClass().getSimpleName();
             var outboxEntity = OrderOutbox.create(payload, topicName, orderEvent.getOrder().getTrackingId().toString(), eventType);
             orderOutboxRepository.save(outboxEntity);
+            orderOutboxRepository.delete(outboxEntity);
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize domain event for outbox: {}", e.getMessage());
             throw new RuntimeException("Failed to persist domain event to outbox. Rolling back transaction.", e);

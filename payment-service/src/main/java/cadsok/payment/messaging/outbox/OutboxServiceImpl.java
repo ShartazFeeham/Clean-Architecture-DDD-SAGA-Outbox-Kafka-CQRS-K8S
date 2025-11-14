@@ -26,6 +26,7 @@ public class OutboxServiceImpl implements OutboxService {
             String eventType = paymentEvent.getClass().getSimpleName();
             var outboxEntity = PaymentOutbox.create(payload, topicName, paymentEvent.getPayment().getOrderId().toString(), eventType);
             paymentOutboxRepository.save(outboxEntity);
+            paymentOutboxRepository.delete(outboxEntity);
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize domain event for outbox: {}", e.getMessage());
             throw new RuntimeException("Failed to persist domain event to outbox. Rolling back transaction.", e);
