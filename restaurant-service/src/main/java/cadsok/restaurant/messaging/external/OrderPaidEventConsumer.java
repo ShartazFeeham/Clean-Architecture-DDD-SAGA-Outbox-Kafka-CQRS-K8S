@@ -25,7 +25,7 @@ public class OrderPaidEventConsumer {
     @LogAction("Consuming order paid event and saving data in database")
     public void onPaymentProcessing(ConsumerRecord<String, String> record) {
         try {
-            JsonNode root = objectMapper.readTree(record.value());
+            JsonNode root = objectMapper.readTree(record.value()).path("payload");
             String orderId = root.path("order").path("trackingId").path("value").asText();
             String detailJson = new ObjectMapper().writeValueAsString(root.path("order"));
 

@@ -34,7 +34,7 @@ public class PaymentProcessingExecutorConsumer {
     @LogAction("Consuming payment processing event and executing payment")
     public void onPaymentProcessing(ConsumerRecord<String, String> record) {
         try {
-            JsonNode root = objectMapper.readTree(record.value());
+            JsonNode root = objectMapper.readTree(record.value()).path("payload");
             // Expect our own event shape: { "payment": { "paymentId": {"value": "..."}, ... } }
             String paymentIdStr = root.path("payment").path("paymentId").path("value").asText(null);
             if (paymentIdStr == null) {

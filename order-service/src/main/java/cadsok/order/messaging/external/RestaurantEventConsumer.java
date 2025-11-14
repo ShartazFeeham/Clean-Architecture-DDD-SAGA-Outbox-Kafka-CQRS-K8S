@@ -26,7 +26,7 @@ public class RestaurantEventConsumer {
         log.info("Consumed message: Key: {}, Topic: {}, Partition: {}, Offset: {}",
                 record.key(), record.topic(), record.partition(), record.offset());
         try {
-            JsonNode root = objectMapper.readTree(record.value());
+            JsonNode root = objectMapper.readTree(record.value()).path("payload");
             String orderId = root.path("orderId").asText();
             String status = root.path("status").asText();
 

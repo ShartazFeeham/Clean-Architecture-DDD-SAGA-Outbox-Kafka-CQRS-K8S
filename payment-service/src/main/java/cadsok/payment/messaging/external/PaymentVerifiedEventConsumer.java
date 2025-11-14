@@ -26,8 +26,8 @@ public class PaymentVerifiedEventConsumer {
     public void onPaymentVerified(ConsumerRecord<String, String> record) {
         try {
             JsonNode root = objectMapper.readTree(record.value());
-            boolean isValid = root.path("valid").asBoolean(false);
-            String paymentIdStr = root.path("paymentId").asText(null);
+            boolean isValid = root.path("payload").path("valid").asBoolean(false);
+            String paymentIdStr = root.path("payload").path("paymentId").asText(null);
 
             paymentVerificationMessageListener.handleVerificationResponse(new PaymentInfoVarificationDto(paymentIdStr, isValid));
         } catch (Exception e) {

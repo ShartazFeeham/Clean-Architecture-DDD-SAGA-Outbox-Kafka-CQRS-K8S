@@ -27,7 +27,7 @@ public class PaymentCompletedEventConsumer {
         log.info("Consumed message: Key: {}, Topic: {}, Partition: {}, Offset: {}",
                 record.key(), record.topic(), record.partition(), record.offset());
         try {
-            JsonNode root = objectMapper.readTree(record.value());
+            JsonNode root = objectMapper.readTree(record.value()).path("payload");
             JsonNode paymentNode = root.path("payment");
             String orderIdStr = paymentNode.path("orderId").path("value").asText(null);
 

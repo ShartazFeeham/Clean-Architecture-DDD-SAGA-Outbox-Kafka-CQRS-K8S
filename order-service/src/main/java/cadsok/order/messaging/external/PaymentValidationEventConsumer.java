@@ -28,7 +28,7 @@ public class PaymentValidationEventConsumer {
                 record.key(), record.topic(), record.partition(), record.offset());
         try {
             JsonNode root = objectMapper.readTree(record.value());
-            JsonNode paymentNode = root.path("payment");
+            JsonNode paymentNode = root.path("payload").path("payment");
             String paymentIdStr = paymentNode.path("paymentId").path("value").asText(null);
             String orderIdStr = paymentNode.path("orderId").path("value").asText(null);
             String amount = paymentNode.path("price").path("amount").asText(paymentIdStr);

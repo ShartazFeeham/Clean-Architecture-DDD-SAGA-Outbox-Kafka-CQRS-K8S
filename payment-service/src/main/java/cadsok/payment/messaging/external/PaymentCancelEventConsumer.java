@@ -24,7 +24,7 @@ public class PaymentCancelEventConsumer {
     @LogAction("Consuming payment cancel event for rolling back")
     public void onPaymentVerified(ConsumerRecord<String, String> record) {
         try {
-            JsonNode root = objectMapper.readTree(record.value());
+            JsonNode root = objectMapper.readTree(record.value()).path("payload");
             String paymentId = root.path("payment").path("paymentId").path("value").asText();
 
             paymentRollbackEventListener.rollbackPayment(paymentId);

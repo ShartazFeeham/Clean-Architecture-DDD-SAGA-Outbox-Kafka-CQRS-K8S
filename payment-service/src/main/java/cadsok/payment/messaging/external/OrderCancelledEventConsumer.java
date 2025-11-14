@@ -27,7 +27,7 @@ public class OrderCancelledEventConsumer {
     @LogAction("Consuming payment verified event")
     public void onPaymentVerified(ConsumerRecord<String, String> record) {
         try {
-            JsonNode root = objectMapper.readTree(record.value());
+            JsonNode root = objectMapper.readTree(record.value()).path("payload");
             String trackingId = root.path("order").path("trackingId").path("value").asText();
 
             paymentCancelEventListener.handlePaymentCancelEvent(new PaymentCancelRequestDto(trackingId));
